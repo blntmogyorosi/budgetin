@@ -1,0 +1,19 @@
+.transaction-detail {
+    .transaction-product-list {
+        .transction-product {
+            display: flex;
+            flex-direction: nowrap row;
+            justify-content: space-between;
+            align-items: center;
+
+            .product-name {
+                font-size: 1rem;
+            }
+
+            .product-value {
+                font-size: 0.9rem;
+                font-weight: 700;
+            }
+        }
+    }
+}

@@ -7,6 +7,9 @@ import Home from './containers/Home'
 import Register from './containers/Register'
 import LogIn from './containers/LogIn'
 import Dashboard from './containers/Dashboard'
+import TransactionsPage from './containers/TransactionsPage'
+import UnitsPage from './containers/UnitsPage'
+import CategoriesPage from './containers/CategoriesPage'
 
 
 const App = () => {
@@ -16,6 +19,9 @@ const App = () => {
             <UnauthenticatedRoute path={Register.routeName} component={Register} />
             <UnauthenticatedRoute path={LogIn.routeName} component={LogIn} />
             <AuthenticatedRoute path={Dashboard.routeName} component={Dashboard} />
+            <AuthenticatedRoute path={CategoriesPage.routeName} component={CategoriesPage} />
+            <AuthenticatedRoute path={UnitsPage.routeName} component={UnitsPage} />
+            <AuthenticatedRoute path={TransactionsPage.routeName} component={TransactionsPage} />
         </Switch>
     )
 }

@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 
 import LogIn from './LogIn'
 import Layout from '../hoc/Layout/Layout'
-import Title from '../components/Title/Title'
+import { SmallContainer } from '../hoc/Container'
+import { Box, BoxHeader, BoxFooter } from '../components/Box'
 import Input from '../components/Form/Input/Input'
 import Button from '../components/Form/Button/Button'
 import { registerUser } from '../redux/actions/authActions'
@@ -69,20 +70,28 @@ class Register extends React.Component {
 
         return (
             <Layout>
-                <Title component="h2">Register</Title>
-                <form>
-                    {Object.entries(this.state.form).map(([id, input]) => (
-                        <Input
-                            key={id}
-                            id={id}
-                            {...input}
-                            error={errors[id]}
-                        />
-                    ))}
-                    <Button type="submit" onClick={this.onFormSubmit}>
-                        Register
-                    </Button>
-                </form>
+                <SmallContainer>
+                    <Box>
+                        <form>
+                            <BoxHeader>
+                                Register
+                            </BoxHeader>
+                            {Object.entries(this.state.form).map(([id, input]) => (
+                                <Input
+                                    key={id}
+                                    id={id}
+                                    {...input}
+                                    error={errors[id]}
+                                />
+                            ))}
+                            <BoxFooter>
+                                <Button type="submit" onClick={this.onFormSubmit}>
+                                    Register
+                            </Button>
+                            </BoxFooter>
+                        </form>
+                    </Box>
+                </SmallContainer>
             </Layout>
         )
     }

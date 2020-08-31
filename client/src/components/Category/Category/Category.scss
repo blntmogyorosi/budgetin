@@ -1,0 +1,21 @@
+.category {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+
+    .category-icon,
+    .category-type {
+        flex: 0 1 auto;
+        width: 2.5rem;
+        font-size: 1.75rem;
+        text-align: center;
+    }
+
+    .category-name {
+        flex: 1 1 auto;
+        margin: 0 1rem;
+        font-size: 1.25rem;
+    }
+}

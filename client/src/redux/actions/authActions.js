@@ -7,7 +7,7 @@ import { appendMessage } from './messagesActions'
 import { setErrors } from './errorsAction'
 
 
-export const registerUser = (data, actionOnSuccess) => dispatch => {
+export const registerUser = (data, callback) => dispatch => {
     axios
         .post('/api/users/register', data)
         .then(res => {
@@ -15,12 +15,12 @@ export const registerUser = (data, actionOnSuccess) => dispatch => {
                 type: 'success',
                 text: 'You registered successfully! Now you can log in with the provided credentials!',
             }))
-            actionOnSuccess()
+            if (callback) callback()
         })
         .catch(err => dispatch(setErrors(err.response.data)))
 }
 
-export const loginUser = data => dispatch => {
+export const loginUser = (data, callback) => dispatch => {
     axios
         .post('/api/users/login', data)
         .then(res => {
@@ -33,6 +33,7 @@ export const loginUser = data => dispatch => {
                 type: SET_CURRENT_USER,
                 payload: res.data,
             })
+            if (callback) callback()
         })
         .catch(err => dispatch(setErrors(err.response.data)))
 }

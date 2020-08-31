@@ -7,6 +7,8 @@ import './authenticate'
 import store from './redux'
 import App from './App'
 
+import './index.scss'
+
 
 ReactDOM.render(
     <Provider store={store}>
