@@ -14,12 +14,14 @@ const TransactionDetail = ({ transaction }) => {
                 <Transaction transaction={transaction} />
             </BoxHeader>
             <div className="transaction-product-list">
-                {transaction.productList.map(p => (
-                    <div key={p._id} className="transction-product">
-                        <span className="product-name">{p.name}</span>
-                        <TransactionValue value={p.value} />
-                    </div>
-                ))}
+                {transaction.productList &&
+                    transaction.productList.map(p => (
+                        <div key={p.name} className="transction-product">
+                            <span className="product-name">{p.name}</span>
+                            <TransactionValue value={p.value} />
+                        </div>
+                    ))
+                }
             </div>
         </Box>
     )

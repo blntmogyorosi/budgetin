@@ -29,7 +29,7 @@ const getTransactions = (user, from, to) => {
                     value: transaction.value,
                 };
                 if (!Object.keys(formattedTransactions).includes(performDate))
-                    formattedTransactions[performDate] = [ formattedTransaction ]
+                    formattedTransactions[performDate] = [formattedTransaction]
                 else
                     formattedTransactions[performDate].push(formattedTransaction)
                 return formattedTransactions;
@@ -40,28 +40,7 @@ const getTransactions = (user, from, to) => {
 const getTransaction = (user, _id) => {
     return Transaction
         .findOne({ _id, user })
-        .populate(['category', 'unit'])
-        .then(async transaction => {
-            if (!transaction) throw { _id: `No transaction found with id '${_id}'!`};
-            const productList = await Product.find({ transaction: _id });
-            const fullTransaction = {
-                _id: transaction._id,
-                category: {
-                    _id: transaction.category._id,
-                    name: transaction.category.name,
-                    icon: transaction.category.icon,
-                    color: transaction.category.color,
-                },
-                unit: {
-                    _id: transaction.unit._id,
-                    name: transaction.unit.name,
-                },
-                value: transaction.value,
-                performedOn: transaction.performedOn,
-            };
-            fullTransaction.productList = productList.map(p => ({ _id: p._id, name: p.name, value: p.value }));
-            return fullTransaction;
-        });
+        .populate(['category', 'unit']);
 }
 
 module.exports = { getTransactions, getTransaction };

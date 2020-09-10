@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const Category = require('./Category');
 const Unit = require('./Unit');
-const Product = require('./Product');
+const ProductSchema = require('./Product');
 
 
 const TransactionSchema = new Schema({
@@ -28,6 +28,10 @@ const TransactionSchema = new Schema({
         type: Number,
         required: true,
     },
+    productList: [{
+        type: ProductSchema,
+        default: [],
+    }],
 }, { versionKey: false, timestamps: false });
 
 TransactionSchema.statics = {
@@ -49,32 +53,26 @@ TransactionSchema.statics = {
                 return reject(errors);
             } else {
                 const multiplier = categoryObj.type === 'INCOME' ? 1 : -1;
-                return resolve(this({ user, category, unit, performedOn, value: productList.reduce((sum, p) => Number(sum) + Math.abs(Number(p.value)), 0) * multiplier }));
+                return resolve(
+                    this({
+                        user, category, unit, performedOn,
+                        value: productList.reduce((sum, p) => Number(sum) + Math.abs(Number(p.value)), 0) * multiplier,
+                        productList: productList
+                            .filter(p => p.value)
+                            .reduce((list, p) => {
+                                for (let i = 0; i < list.length; i++) {
+                                    if (list[i].name === p.name) {
+                                        list[i].value += (Math.abs(p.value) * multiplier);
+                                        return list;
+                                    }
+                                }
+                                list.push({ name: p.name, value: Math.abs(p.value) * multiplier });
+                                return list;
+                            }, [])
+                    })
+                );
             }
         })
-    }
-}
-
-TransactionSchema.methods = {
-    saveProductList: function (productList) {
-        const multiplier = this.value > 0 ? 1 : -1;
-        return Promise
-            .all(
-                productList
-                    .filter(p => p.value)
-                    .reduce((list, p) => {
-                        for (let i = 0; i < list.length; i++) {
-                            if (list[i].name === p.name) {
-                                list[i].value += (Math.abs(p.value) * multiplier);
-                                return list;
-                            }
-                        }
-                        list.push({ name: p.name, value: Math.abs(p.value) * multiplier });
-                        return list;
-                    }, [])
-                    .map(p => new Product({ transaction: this._id, value: p.value, name: p.name }).save())
-            )
-            .then(products => products);
     }
 }
 

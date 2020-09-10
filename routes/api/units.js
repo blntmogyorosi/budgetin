@@ -46,8 +46,6 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
     const { name } = req.body;
     const { _id } = req.user;
 
-    console.log(req.body);
-
     Unit
         .validateCreate(name, _id)
         .then(unit => unit.save())

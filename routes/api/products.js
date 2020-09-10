@@ -1,48 +1,40 @@
 const { Router } = require('express');
 const passport = require('passport');
 
-const Product = require('../../models/Product');
+const Transaction = require('../../models/Transaction');
 
 
 const router = Router();
 
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Product
+    Transaction
         .aggregate([
             {
-                $lookup: {
-                    from: "transactions",
-                    localField: "transaction",
-                    foreignField: "_id",
-                    as: "transaction",
+                $match: {
+                    user: req.user._id,
                 },
             },
             {
                 $project: {
-                    name: "$name",
-                    transaction: "$transaction",
+                    productList: "$productList",
                 },
             },
-            // {
-            //     $match: {
-            //         user: req.user._id
-            //     },
-            // },
-            // {
-            //     $project: {
-            //         _id: "$_id",
-            //         name: "$name",
-            //         productCount: { $size: "$transactions" },
-            //         transactionsSum: { $abs: { $sum: "$transactions.value" } },
-            //     },
-            // },
-            // {
-            //     $sort: {
-            //         transactionsCount: -1,
-            //         transactionsSum: -1,
-            //         name: 1,
-            //     },
-            // },
+            {
+                $unwind: "$productList",
+            },
+            {
+                $group: {
+                    _id: "$productList.name",
+                    totalValue: { $sum: "$productList.value" },
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    name: "$_id",
+                    totalValue: "$totalValue",
+                },
+            },
         ])
         .then(products => res.json(products))
         .catch(err => res.status(400).json(err));
