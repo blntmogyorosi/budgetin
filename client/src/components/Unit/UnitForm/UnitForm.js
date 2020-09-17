@@ -39,7 +39,12 @@ class UnitForm extends React.Component {
 
     onFormSubmit = (e) => {
         e.preventDefault()
-        this.props.saveUnit(Object.entries(this.state.form).reduce((data, [id, input]) => { data[id] = input.value; return data; }, {}))
+        this.props.saveUnit(
+            Object.entries(this.state.form).reduce((data, [id, input]) => { data[id] = input.value; return data; }, {}),
+            (unit) => {
+                if (this.props.onReady) this.props.onReady(unit)
+            }    
+        )
     }
 
     render() {

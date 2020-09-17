@@ -14,20 +14,23 @@ export const fetchCategories = () => dispatch => {
         .catch(err => dispatch(setErrors(err.response.data)))
 }
 
-export const saveCategory = category => dispatch => {
+export const saveCategory = (category, callback) => dispatch => {
     if (category._id)
-        dispatch(updateCategory(category))
+        dispatch(updateCategory(category, callback))
     else
-        dispatch(createCategory(category))
+        dispatch(createCategory(category, callback))
 }
 
-const createCategory = category => dispatch => {
+const createCategory = (category, callback) => dispatch => {
     axios
         .post('/api/categories', category)
-        .then(res => dispatch({
-            type: APPEND_CATEGORY,
-            payload: res.data,
-        }))
+        .then(res => {
+            dispatch({
+                type: APPEND_CATEGORY,
+                payload: res.data,
+            })
+            if (callback) callback(res.data)
+        })
         .catch(err => dispatch(setErrors(err.response.data)))
 }
 

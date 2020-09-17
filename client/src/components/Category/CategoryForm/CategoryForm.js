@@ -57,7 +57,12 @@ class CategoryForm extends React.Component {
 
     onFormSubmit = (e) => {
         e.preventDefault()
-        this.props.saveCategory(Object.entries(this.state.form).reduce((data, [id, input]) => { data[id] = input.value; return data; }, {}))
+        this.props.saveCategory(
+            Object.entries(this.state.form).reduce((data, [id, input]) => { data[id] = input.value; return data; }, {}),
+            (category) => {
+                if (this.props.onReady) this.props.onReady(category)
+            }
+        )
     }
 
     render() {
