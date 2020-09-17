@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import CategoriesPage from '.'
 import { SmallContainer } from '../../hoc/Container'
 import CategoryForm from '../../components/Category/CategoryForm/CategoryForm'
 import { fetchTransactions } from '../../redux/actions/transactionsActions'
@@ -17,7 +18,7 @@ class CategoryFormPage extends React.Component {
     render() {
         return (
             <SmallContainer>
-                <CategoryForm />
+                <CategoryForm onReady={() => this.props.history.push(`${CategoriesPage.routeName}`)} />
             </SmallContainer>
         )
     }
