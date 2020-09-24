@@ -10,7 +10,9 @@ import UnitList from '../components/Unit/UnitList/UnitList'
 import TransactionList from '../components/Transaction/TransactionList/TransactionList'
 import { fetchCategories } from '../redux/actions/categoriesActions'
 import { fetchUnits } from '../redux/actions/unitsActions'
+import { fetchProducts } from '../redux/actions/productsActions'
 import { fetchTransactions } from '../redux/actions/transactionsActions'
+import Charts from '../components/Charts/Charts'
 
 
 class Dashboard extends React.Component {
@@ -21,6 +23,7 @@ class Dashboard extends React.Component {
         this.props.fetchCategories()
         this.props.fetchUnits()
         this.props.fetchTransactions()
+        this.props.fetchProducts()
     }
 
     render() {
@@ -34,6 +37,9 @@ class Dashboard extends React.Component {
                     </div>
                     <TransactionList transactions={{ [moment().format("YYYY-MM-DD")]: this.props.transactions.dictionary[moment().format("YYYY-MM-DD")] || [] }} isWidget />
                 </Container>
+                <Container>
+                    <Charts />
+                </Container>
             </Layout>
         )
     }
@@ -44,6 +50,7 @@ const mapStateToProps = state => ({
     categories: state.categories,
     transactions: state.transactions,
     units: state.units,
+    products: state.products,
 })
 
-export default connect(mapStateToProps, { fetchCategories, fetchUnits, fetchTransactions })(Dashboard)
+export default connect(mapStateToProps, { fetchCategories, fetchUnits, fetchTransactions, fetchProducts })(Dashboard)
