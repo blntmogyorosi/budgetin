@@ -6,6 +6,7 @@ module.exports = {
         try {
             const salt = bcrypt.genSaltSync(10);
             const hash = bcrypt.hashSync(string, salt);
+            console.log(hash)
             return hash;
         } catch (err) {
             throw err;

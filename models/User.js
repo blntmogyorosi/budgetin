@@ -16,9 +16,13 @@ const UserSchema = new Schema({
         required: true,
         trim: true,
     },
-    registered: {
+    registeredAt: {
         type: Date,
         default: Date.now,
+    },
+    defaultAccount: {
+        type: Schema.Types.ObjectId,
+        ref: 'Account',
     },
 }, { versionKey: false, timestamps: false });
 

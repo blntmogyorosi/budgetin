@@ -8,6 +8,8 @@ import './TransactionDetail.scss'
 
 
 const TransactionDetail = ({ transaction }) => {
+    if (!transaction) return null
+
     return (
         <Box className="transaction-detail">
             <BoxHeader>

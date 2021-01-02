@@ -6,8 +6,8 @@ import { SmallContainer } from '../../hoc/Container'
 import TransactionsPage from '.'
 import TransactionFormPage from './TransactionFormPage'
 import Title from '../../components/Title/Title'
-import TransactionList from '../../components/Transaction/TransactionList/TransactionList'
 import { fetchTransactions } from '../../redux/actions/transactionsActions'
+import TransactionList from '../../components/TransactionList/TransactionList'
 
 
 class TransactionListPage extends React.Component {
@@ -20,12 +20,15 @@ class TransactionListPage extends React.Component {
 
     render() {
         return (
-            <SmallContainer>
-                <Title component="h2" button={{ label: 'New Transaction', onClick: () => this.props.history.push(`${TransactionsPage.routeName}${TransactionFormPage.routeName}`) }}>
+            <React.Fragment>
+                <Title
+                    component="h2"
+                    button={{ children: 'New Transaction', onClick: () => this.props.history.push(`${TransactionsPage.routeName}${TransactionFormPage.routeName}`), color: 'primary', variant: 'contained', }}
+                >
                     Transactions
                 </Title>
-                <TransactionList transactions={this.props.transactions.dictionary} />
-            </SmallContainer>
+                <TransactionList transactions={this.props.transactions.dictionary["2020-11"] || []} />
+            </React.Fragment>
         )
     }
 

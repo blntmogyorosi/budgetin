@@ -1,6 +1,6 @@
 import React from 'react'
+import { Button } from '@material-ui/core'
 
-import Button from '../Form/Button/Button'
 
 import './Title.scss'
 
@@ -12,9 +12,7 @@ const Title = ({ children, component, button }) => {
                 {children}
             </h1>
             {button &&
-                <Button onClick={button.onClick} skin={button.skin}>
-                    {button.label}
-                </Button>
+                <Button {...button} />
             }
         </div>
     )

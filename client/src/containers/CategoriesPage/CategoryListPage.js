@@ -2,12 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
-import { SmallContainer } from '../../hoc/Container'
 import CategoriesPage from '.'
 import CategoriesFormPage from './CategoryFormPage'
 import Title from '../../components/Title/Title'
 import CategoryList from '../../components/Category/CategoryList/CategoryList'
 import { fetchCategories } from '../../redux/actions/categoriesActions'
+import { Paper } from '@material-ui/core'
 
 
 class CategoryListPage extends React.Component {
@@ -20,12 +20,17 @@ class CategoryListPage extends React.Component {
 
     render() {
         return (
-            <SmallContainer>
-                <Title component="h2" button={{ label: 'New Category', onClick: () => this.props.history.push(`${CategoriesPage.routeName}${CategoriesFormPage.routeName}`) }}>
+            <React.Fragment>
+                <Title
+                    component="h2"
+                    button={{ children: 'New Category', onClick: () => this.props.history.push(`${CategoriesPage.routeName}${CategoriesFormPage.routeName}`), color: 'primary', variant: 'contained' }}
+                >
                     Categories
                 </Title>
-                <CategoryList categories={this.props.categories.list} />
-            </SmallContainer>
+                <Paper>
+                    <CategoryList categories={this.props.categories.list} />
+                </Paper>
+            </React.Fragment>
         )
     }
 

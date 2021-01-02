@@ -1,30 +1,31 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
 
-import Categories from '../../../containers/Categories'
 import Category from '../Category/Category'
-import { Box, BoxFooter, BoxHeader } from '../../Box'
+import { GridList, GridListTile } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 
+
+const useStyles = makeStyles(theme => ({
+    categoryList: {
+        // overflowY: 'scroll',
+    },
+    categoryListTile: {
+        height: 'min-content !important',
+        padding: `${theme.spacing(2)}px !important`,
+    },
+}))
 
 const CategoryList = ({ categories, isWidget = false }) => {
+    const classes = useStyles()
+
     return (
-        <Box className="category-list-container">
-            {isWidget &&
-                <BoxHeader>
-                    Categories
-                </BoxHeader>
-            }
-            <div className="category-list">
-                {categories.map(category => (
-                    <Category key={category._id} category={category} />
-                ))}
-            </div>
-            {isWidget &&
-                <BoxFooter>
-                    <NavLink to={Categories.routeName}>See all</NavLink>
-                </BoxFooter>
-            }
-        </Box>
+        <GridList className={classes.categoryList} cols={3}>
+            {categories.map(category => (
+                <GridListTile key={category._id} className={classes.categoryListTile}>
+                    <Category category={category} />
+                </GridListTile>
+            ))}
+        </GridList>
     )
 }
 

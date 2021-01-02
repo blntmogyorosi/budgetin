@@ -20,3 +20,7 @@ export const INSERT_TRANSACTION = 'INSERT_TRANSACTION'
 // Products Actions
 export const SET_PRODUCTS = 'SET_PRODUCTS'
 export const APPEND_PRODUCT = 'APPEND_PRODUCT'
+// Month Actions
+export const SET_MONTH = 'SET_MONTH'
+export const PREVIOUS_MONTH = 'PREVIOUS_MONTH'
+export const NEXT_MONTH = 'NEXT_MONTH'

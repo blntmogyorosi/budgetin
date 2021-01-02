@@ -10,16 +10,27 @@ class TransactionListPage extends React.Component {
 
     static routeName = '/:transaction'
 
-    componentDidMount() {
-        this.props.fetchTransaction(this.props.match.params.transaction)
+    constructor(props) {
+        super(props)
+        this.state = {
+            transaction: {},
+        }
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        const _id = props.match.params.transaction
+        state.transaction = Object.values(props.transactions.dictionary)
+            .reduce((list, month) => ([...list, ...month]), [])
+            .filter(t => t._id === _id)[0]
+        return state
     }
 
     render() {
         const { transactions } = this.props
         return (
-            <SmallContainer>
-                {Object.keys(transactions.item).length > 0 && <TransactionDetail transaction={this.props.transactions.item} />}
-            </SmallContainer>
+            <React.Fragment>
+                <TransactionDetail transaction={this.state.transaction} />
+            </React.Fragment>
         )
     }
 

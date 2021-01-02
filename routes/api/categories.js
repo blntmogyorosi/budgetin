@@ -53,7 +53,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
         .validateCreate(name, icon, color, type, _id)
         .then(category => category.save())
         .then(category => res.json(category))
-        .catch(err => res.status(400).json(err));
+        .catch(err => { console.log(err); res.status(400).json(err) });
 });
 
 module.exports = router;

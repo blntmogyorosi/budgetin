@@ -4,13 +4,13 @@ import { connect } from 'react-redux'
 
 import { Box, BoxHeader, BoxFooter } from '../../Box'
 import TransactionsPage from '../../../containers/TransactionsPage'
-import Input from '../../Form/Input/Input'
 import Button from '../../Form/Button/Button'
 import { fetchCategories } from '../../../redux/actions/categoriesActions'
 import { fetchUnits } from '../../../redux/actions/unitsActions'
 import { saveTransaction } from '../../../redux/actions/transactionsActions'
 
 import './TransactionForm.scss'
+import { Input, TextField } from '@material-ui/core'
 
 
 class TransactionForm extends React.Component {
@@ -80,7 +80,7 @@ class TransactionForm extends React.Component {
     renderPerformDateInput = () => {
         return (
             <div className="perform-date-input">
-                <Input
+                <TextField
                     id="performedOn" {...this.state.form.performedOn}
                 />
             </div>
@@ -119,7 +119,7 @@ class TransactionForm extends React.Component {
         e.preventDefault()
         const { form } = this.state
         if (
-            form.productList.length !== 0 && 
+            form.productList.length !== 0 &&
             (
                 form.productList[form.productList.length - 1].name.value === '' ||
                 form.productList[form.productList.length - 1].value.value === ''

@@ -1,14 +1,27 @@
 import React from 'react'
 import DoughnutChart from '../Chart/DoughnutChart'
+import { Doughnut } from 'react-chartjs-2'
+import { Paper } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 
+
+const useStyles = makeStyles(theme => ({
+    chartContainer: {
+        width: '100%',
+        overflow: 'hidden'
+    }
+}))
 
 const CategoryChart = ({ month, categories }) => {
-    const type = "EXPENSE"
+    const classes = useStyles()
+
     return (
-        <DoughnutChart
-            title="Categories"
-            text={month} data={categories.filter(c => c.type === type && c.transactoinsSum !== 0).map(c => ({ name: c.name, y: Math.abs(c.transactionsSum) }))}
-        />
+        <Paper className={classes.chartContainer}>
+            <DoughnutChart
+                title={month}
+                data={categories.sort((prev, next) => next.y - prev.y)}
+            />
+        </Paper>
     )
 }
 

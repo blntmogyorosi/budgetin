@@ -14,19 +14,21 @@ const getTransactions = (user, from, to) => {
     return Transaction
         .find({ user, performedOn: { $gte: from, $lte: to || moment().format("YYYY-MM-DD") } })
         .populate(['category', 'unit'])
-        .sort({ performedOn: -1, 'category.name': 1 })
+        .sort({ performedOn: -1 })
         .then(transactions => {
             return transactions.reduce((formattedTransactions, transaction) => {
-                const performDate = moment(transaction.performedOn).format("YYYY-MM-DD");
+                const performDate = moment(transaction.performedOn).format("YYYY-MM");
                 const formattedTransaction = {
                     _id: transaction._id,
                     category: {
                         name: transaction.category.name,
                         icon: transaction.category.icon,
                         color: transaction.category.color,
+                        type: transaction.category.type,
                     },
                     unit: transaction.unit.name,
                     value: transaction.value,
+                    performedOn: transaction.performedOn,
                 };
                 if (!Object.keys(formattedTransactions).includes(performDate))
                     formattedTransactions[performDate] = [formattedTransaction]

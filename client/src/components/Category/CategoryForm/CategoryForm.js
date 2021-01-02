@@ -2,12 +2,33 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { Box, BoxHeader, BoxFooter } from '../../Box'
-import Input from '../../Form/Input/Input'
-import Button from '../../Form/Button/Button'
 import { saveCategory } from '../../../redux/actions/categoriesActions'
 import { resetErrors } from '../../../redux/actions/errorsAction'
+import { Button, Grid, Paper, Typography, withStyles } from '@material-ui/core'
+import IconSelector from '../../IconSelector/IconSelector'
+import ColorSelector from '../../ColorSelector/ColorSelector'
+import TypeSelector from '../../TypeSelector/TypeSelector'
+import MyTextField from '../../MyTextField/MyTextField'
 
+
+const styles = theme => ({
+    paper: {
+        padding: theme.spacing(4),
+        marginBottom: theme.spacing(4),
+    },
+    title: {
+        marginBottom: theme.spacing(4),
+        textAlign: 'center',
+    },
+    gridItem: {
+        marginBottom: theme.spacing(2),
+    },
+})
+
+const iconList = [
+    { value: 'shopping_cart', name: 'shopping_cart', label: 'Groceries', color: 'red' },
+    { value: 'receipt_long', name: 'receipt_long' }
+]
 
 class CategoryForm extends React.Component {
 
@@ -16,28 +37,49 @@ class CategoryForm extends React.Component {
         this.state = {
             form: {
                 type: {
-                    type: 'text', // radio button
-                    label: 'Type',
+                    component: TypeSelector,
+                    id: 'type',
+                    name: 'type',
                     value: '',
                     onChange: this.onInputChange,
+                    grid: {
+                        xs: 12,
+                    },
+                },
+                color: {
+                    component: ColorSelector,
+                    id: 'color',
+                    name: 'color',
+                    value: '#000000',
+                    onChange: this.onInputChange,
+                    grid: {
+                        xs: 12,
+                    },
+                },
+                icon: {
+                    component: IconSelector,
+                    id: 'icon',
+                    name: 'icon',
+                    value: '',
+                    onChange: this.onInputChange,
+                    icons: iconList,
+                    color: '#000000',
+                    grid: {
+                        xs: 12,
+                    },
                 },
                 name: {
-                    type: 'text',
+                    component: MyTextField,
+                    id: 'name',
+                    name: 'name',
+                    variant: 'outlined',
                     label: 'Name',
                     value: '',
                     onChange: this.onInputChange,
-                },
-                icon: {
-                    type: 'text',
-                    label: 'Icon',
-                    value: '',
-                    onChange: this.onInputChange,
-                },
-                color: {
-                    type: 'color',
-                    label: 'Color',
-                    value: '#000000',
-                    onChange: this.onInputChange,
+                    fullWidth: true,
+                    grid: {
+                        xs: 12,
+                    },
                 },
             },
         }
@@ -48,51 +90,67 @@ class CategoryForm extends React.Component {
     }
 
     onInputChange = (e) => {
-        e.preventDefault()
-        const { id, value } = e.target
-        const form = Object.assign(this.state.form)
-        form[id].value = value
+        const { name, value } = e.target
+        const { form } = this.state
+        form[name].value = value
+        form.icon.color = form.color.value
         this.setState({ form })
     }
+
 
     onFormSubmit = (e) => {
         e.preventDefault()
         this.props.saveCategory(
-            Object.entries(this.state.form).reduce((data, [id, input]) => { data[id] = input.value; return data; }, {}),
+            Object.values(this.state.form)
+                .reduce((data, input) => {
+                    data[input.name] = input.value
+                    return data
+                }, {}),
             (category) => {
                 if (this.props.onReady) this.props.onReady(category)
             }
         )
     }
 
+    renderInput = (input) => {
+        return (
+            <Grid item {...input.grid} className={this.props.classes.gridItem}>
+                <input.component
+                    {...input}
+                />
+            </Grid>
+        )
+    }
+
     render() {
-        const { category, errors } = this.props
+        const { category, classes } = this.props
 
         return (
-            <Box className="category-form">
+            <Paper className={classes.paper}>
                 <form>
-                <BoxHeader>
-                    {category && category._id ? 'Edit Category' : 'New Category'}
-                </BoxHeader>
-                    {Object.entries(this.state.form).map(([id, input]) => (
-                        <Input 
-                            key={id}
-                            id={id}
-                            {...input}
-                            error={errors[id]}
-                        />
-                    ))}
-                    <BoxFooter>
-
-                    <Button type="submit" onClick={this.onFormSubmit}>
+                    <Typography variant="h4" component="h4" className={classes.title}>
+                        {category && category._id ? 'Edit Category' : 'New Category'}
+                    </Typography>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            {this.renderInput(this.state.form.type)}
+                        </Grid>
+                        <Grid item xs={3} style={{ height: '100%' }}>
+                            {this.renderInput(this.state.form.icon)}
+                        </Grid>
+                        <Grid item xs={9} style={{ paddingLeft: '8px' }}>
+                            {this.renderInput(this.state.form.color)}
+                            {this.renderInput(this.state.form.name)}
+                        </Grid>
+                    </Grid>
+                    <Button type="submit" color="primary" variant="contained" onClick={this.onFormSubmit}>
                         Save
                     </Button>
-                    <Button type="button" skin="light" onClick={() => this.props.history.goBack()}>
+                    <Button type="button" variant="contained" onClick={() => this.props.history.goBack()}>
                         Cancel
                     </Button>
-                    </BoxFooter>
                 </form>
-            </Box>
+            </Paper>
         )
     }
 
@@ -102,4 +160,4 @@ const mapStateToProps = state => ({
     errors: state.errors
 })
 
-export default connect(mapStateToProps, { saveCategory, resetErrors })(withRouter(CategoryForm))
+export default connect(mapStateToProps, { saveCategory, resetErrors })(withRouter(withStyles(styles)(CategoryForm)))

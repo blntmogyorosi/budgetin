@@ -2,33 +2,31 @@ import React, { Component } from 'react';
 import CanvasJSReact from './canvasjs.react';
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-const DoughnutChart = ({ title, text, data }) => {
-	console.log(data)
+const DoughnutChart = ({ title, data }) => {
 	const options = {
 		animationEnabled: true,
-		title: {
-			text: title,
-		},
+		cutoutPercentage: 10,
 		subtitles: [{
-			text: text,
+			text: title,
 			verticalAlign: "center",
 			fontSize: 24,
 			dockInsidePlotArea: true
 		}],
 		data: [{
 			type: "doughnut",
-			indexLabel: "{name}: {y}",
+			radius: "60%",
+			innerRadius: "75%",
+			indexLabelFontSize: 12,
+			indexLabel: "{name} - {y}",
 			// yValueFormatString: "#,###'%'",
 			dataPoints: data
 		}]
 	}
 
 	return (
-		<div className="doughnut-chart">
-			<CanvasJSChart
-				options={options}
-			/>
-		</div>
+		<CanvasJSChart
+			options={options}
+		/>
 	)
 }
 

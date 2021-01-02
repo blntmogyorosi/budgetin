@@ -13,6 +13,7 @@ export const fetchTransactions = (callback) => dispatch => {
                 type: SET_TRANSACTIONS,
                 payload: res.data
             })
+            if (callback) return callback(res.data)
         })
         .catch(err => dispatch(setErrors(err.response.data)))
 }
@@ -37,7 +38,6 @@ export const saveTransaction = (transaction, callback) => dispatch => {
 const createTransaction = (transaction, callback) => dispatch => {
     axios
         .post('/api/transactions', transaction)
-        // .then(res => console.log(res.data))
         .then(res => callback ? callback(res.data) : undefined)
         .catch(err => dispatch(setErrors(err.response.data)))
 }

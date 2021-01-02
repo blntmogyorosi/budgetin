@@ -1,28 +1,31 @@
 import React from 'react'
+import { AttachMoney as AttachMoneyIcon, MoneyOff as MoneyOffIcon } from '@material-ui/icons'
+import { Icon, makeStyles } from '@material-ui/core'
 
-import './Category.scss'
-
+const useStyles = makeStyles(theme => ({
+    category: {
+        flex: 1,
+        display: 'flex',
+        flexFlow: 'nowrap column',
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
+    },
+    categoryIcon: {
+        fontSize: theme.spacing(8),
+    },
+    categoryName: {
+        fontSize: theme.spacing(2),
+    },
+}))
 
 const Category = ({ category }) => {
+    const classes = useStyles()
+
     return (
-        <div className="category" style={{ color: category.color }}>
-            <span className="category-icon">
-                <i className={category.icon}></i>
-            </span>
-            <div className="category-name">
-                {category.name}
-                (
-                <span className="category-count">{category.transactionsCount}</span>
-                :
-                <span className="category-sum">{category.transactionsSum}</span>
-                )
-            </div>
-            <span className="category-type">
-                {category.type === 'INCOME' ?
-                    <i className="fas fa-sign-in-alt"></i> :
-                    <i className="fas fa-sign-out-alt"></i>
-                }
-            </span>
+        <div className={classes.category} style={{ color: category.color }}>
+            <Icon className={classes.categoryIcon}>{category.icon}</Icon>
+            <div className={classes.categoryName}>{category.name}</div>
         </div>
     )
 }
