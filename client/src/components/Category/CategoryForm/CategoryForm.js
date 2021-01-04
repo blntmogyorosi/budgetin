@@ -125,6 +125,8 @@ class CategoryForm extends React.Component {
     render() {
         const { category, classes } = this.props
 
+        console.log(process.env.ICON_LIST)
+
         return (
             <Paper className={classes.paper}>
                 <form>
