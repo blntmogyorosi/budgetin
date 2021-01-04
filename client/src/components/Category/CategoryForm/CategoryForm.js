@@ -30,6 +30,8 @@ const iconList = [
     { value: 'receipt_long', name: 'receipt_long' },
 ]
 
+const ICON_LIST = 'credit_card,shopping_cart,home,fastfood,health_and_safety,card_giftcard,school,input,savings,sports_esports,outlet,restaurant,commute,receipt_long'
+
 class CategoryForm extends React.Component {
 
     constructor(props) {
@@ -62,7 +64,7 @@ class CategoryForm extends React.Component {
                     name: 'icon',
                     value: '',
                     onChange: this.onInputChange,
-                    icons: process.env.ICON_LIST ? process.env.ICON_LIST.split(',').map(i => ({ value: i, name: i })) : iconList,
+                    icons: ICON_LIST.split(',').map(i => ({ value: i, name: i })),
                     color: '#000000',
                     grid: {
                         xs: 12,
@@ -124,8 +126,6 @@ class CategoryForm extends React.Component {
 
     render() {
         const { category, classes } = this.props
-
-        console.log(process.env.ICON_LIST)
 
         return (
             <Paper className={classes.paper}>
