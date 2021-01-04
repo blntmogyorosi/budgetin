@@ -19,6 +19,7 @@ const useStyles = makeStyles(theme => ({
         marginBottom: theme.spacing(4),
     },
     arrow: {
+        padding: 0,
         '& span': {
             fontSize: theme.spacing(4),
         },

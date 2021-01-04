@@ -7,15 +7,20 @@ import Value from '../Value/Value'
 const useStyles = makeStyles(theme => ({
     balanceBlock: {
         flex: 1,
-        padding: `0 ${theme.spacing(2.5)}px`,
-        fontVariantNumeric: 'tabular-nums',
+        padding: `0 ${theme.spacing(1)}px`,
+        [theme.breakpoints.up('md')]: {
+            padding: `0 ${theme.spacing(2.5)}px`,
+        },
     },
     balanceTitle: {
         marginBottom: theme.spacing(1),
         color: theme.palette.grey[900],
-        fontSize: theme.spacing(3),
         fontWeight: 700,
         textAlign: 'center',
+        fontSize: theme.spacing(1.75),
+        [theme.breakpoints.up('md')]: {
+            fontSize: theme.spacing(3),
+        },
     },
     balanceRecord: {
         display: 'flex',
@@ -25,8 +30,11 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         marginBottom: theme.spacing(0.5),
         color: theme.palette.grey[500],
-        fontSize: theme.spacing(2),
+        fontSize: theme.spacing(1.25),
         fontWeight: 400,
+        [theme.breakpoints.up('md')]: {
+            fontSize: theme.spacing(2),
+        },
     },
 }))
 
