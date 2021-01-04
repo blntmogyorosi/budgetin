@@ -14,6 +14,7 @@ const useStyle = makeStyles(theme => ({
         borderRadius: theme.shape.borderRadius,
     },
     iconSelectorModal: {
+        width: theme.spacing(35),
     },
     iconBox: {
         width: theme.spacing(6),
@@ -37,7 +38,7 @@ const useStyle = makeStyles(theme => ({
         },
     },
     iconImg: {
-        fontSize: theme.spacing(8),
+        fontSize: theme.spacing(7),
     },
     iconName: {
         marginTop: theme.spacing(0.5),

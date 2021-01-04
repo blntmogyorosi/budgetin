@@ -13,8 +13,8 @@ import MyTextField from '../../MyTextField/MyTextField'
 
 const styles = theme => ({
     paper: {
-        padding: theme.spacing(4),
-        marginBottom: theme.spacing(4),
+        padding: theme.spacing(2),
+        marginBottom: theme.spacing(2),
     },
     title: {
         marginBottom: theme.spacing(4),
