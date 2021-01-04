@@ -28,4 +28,28 @@ const AccountSchema = new Schema({
     },
 }, { versionKey: false, timestamps: false });
 
+AccountSchema.statics = {
+    /**
+     * @description 
+     * @param {String} email 
+     * @param {String} password 
+     * @param {String} password2 
+     */
+    validateCreate: function (user, name, currency) {
+        const errors = {}
+
+        if (!user) errors.user = 'The user field is required!';
+        if (!name) errors.name = 'The name field is required!';
+        if (!currency) errors.currency = 'The currency field is required!';
+
+        return this
+            .findOne({ owner: user, name })
+            .then(account => {
+                if (account) errors.email = 'This name is already in use! Please select another one!';
+                if (Object.keys(errors).length > 0) throw errors;
+                else return new this({ owner: user, name, currency });
+            });
+    },
+}
+
 module.exports = Account = model('Account', AccountSchema);

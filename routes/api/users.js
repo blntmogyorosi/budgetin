@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const Account = require('../../models/Account');
 
 const User = require('../../models/User');
 
@@ -7,10 +8,13 @@ const router = Router();
 
 router.post('/register', (req, res) => {
     const { email, password, password2 } = req.body;
+    let newUser
     User
         .validateRegister(email, password, password2)
         .then(user => user.save())
-        .then(user => res.json({ email: user.email }))
+        .then(user => { newUser = user; console.log(user); return Account.validateCreate(user._id, 'Main', 'HUF'); })
+        .then(account => { console.log(account); return account.save() })
+        .then(account => res.json({ email: newUser.email }))
         .catch(err => res.status(400).json(err));
 });
 

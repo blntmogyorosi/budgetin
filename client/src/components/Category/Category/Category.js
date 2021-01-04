@@ -1,5 +1,4 @@
 import React from 'react'
-import { AttachMoney as AttachMoneyIcon, MoneyOff as MoneyOffIcon } from '@material-ui/icons'
 import { Icon, makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({

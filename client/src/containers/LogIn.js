@@ -12,17 +12,24 @@ import { NavLink } from 'react-router-dom'
 const styles = theme => ({
     root: {
         display: 'flex',
-        flexFlow: 'row nowrap',
+        flexFlow: 'column nowrap',
         justifyContent: 'space-between',
         alignContent: 'center',
         width: '100vw',
         height: '100vh',
+        [theme.breakpoints.up('md')]: {
+            flexFlow: 'row nowrap',
+        },
     },
     hero: {
         flex: '1 1 auto',
         backgroundImage: 'url(/img/bg-login.jpg)',
         backgroundSize: 'cover',
         boxShadow: 'inset -16px 0 64px -16px rgba(0, 0, 0, .95)',
+        order: 2,
+        [theme.breakpoints.up('md')]: {
+            order: 1,
+        }
     },
     heroContent: {
         display: 'flex',
@@ -41,6 +48,10 @@ const styles = theme => ({
         flex: '0 1 auto',
         padding: theme.spacing(4),
         maxWidth: '525px',
+        order: 1,
+        [theme.breakpoints.up('md')]: {
+            order: 2,
+        },
     },
     paper: {
         padding: theme.spacing(4),
@@ -116,7 +127,7 @@ class LogIn extends React.Component {
 
         return (
             <Grid container className={classes.root}>
-                <Grid item className={classes.hero}>
+                <Grid item className={classes.hero} xs={12} >
                     <div className={classes.heroContent}>
                         <Typography component="h3" variant="h3">
                             Log in to use our great features

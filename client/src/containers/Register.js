@@ -12,11 +12,14 @@ import { NavLink } from 'react-router-dom'
 const styles = theme => ({
     root: {
         display: 'flex',
-        flexFlow: 'row nowrap',
+        flexFlow: 'column nowrap',
         justifyContent: 'space-between',
         alignContent: 'center',
         width: '100vw',
         height: '100vh',
+        [theme.breakpoints.up('md')]: {
+            flexFlow: 'row nowrap',
+        },
     },
     hero: {
         flex: '1 1 auto',

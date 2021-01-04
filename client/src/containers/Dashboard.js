@@ -5,13 +5,11 @@ import { Grid, Paper } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 
 import UserLayout from '../hoc/Layout/UserLayout'
-import TransactionList from '../components/TransactionList/TransactionList'
 
 import { fetchCategories } from '../redux/actions/categoriesActions'
 import { fetchUnits } from '../redux/actions/unitsActions'
 import { fetchProducts } from '../redux/actions/productsActions'
 import { fetchTransactions } from '../redux/actions/transactionsActions'
-import { previousMonth, nextMonth } from '../redux/actions/dateActions'
 import CategoryChart from '../components/CategoryChart/CategoryChart'
 import MonthSelector from '../components/MonthSelector/MonthSelector'
 
@@ -92,30 +90,7 @@ class Dashboard extends React.Component {
             <UserLayout>
                 <Grid container>
                     <Grid item xs={12}>
-                        <MonthSelector
-                            month={month}
-                            year={year}
-                            monthlyExpense={transactions.reduce((sum, t) => {
-                                if (t.category.type !== "EXPENSE") return sum
-                                return sum + t.value
-                            }, 0)}
-                            monthlyIncome={transactions.reduce((sum, t) => {
-                                if (t.category.type !== "INCOME") return sum
-                                return sum + t.value
-                            }, 0)}
-                            totalExpense={
-                                this.props.categories.list
-                                    .filter(t => t.transactionsSum !== 0 && t.type === "EXPENSE")
-                                    .reduce((sum, c) => sum + c.transactionsSum, 0)
-                            }
-                            totalIncome={
-                                this.props.categories.list
-                                    .filter(t => t.transactionsSum !== 0 && t.type === "INCOME")
-                                    .reduce((sum, c) => sum + c.transactionsSum, 0)
-                            }
-                            previousMonth={this.props.previousMonth}
-                            nextMonth={this.props.nextMonth}
-                        />
+                        <MonthSelector />
                     </Grid>
                     <Grid container>
                         <Grid item xs={12} md={6} className={classes.firstCol}>
@@ -171,4 +146,4 @@ const mapStateToProps = state => ({
     products: state.products,
 })
 
-export default connect(mapStateToProps, { fetchCategories, fetchUnits, fetchTransactions, fetchProducts, previousMonth, nextMonth  })(withStyles(styles)(Dashboard))
+export default connect(mapStateToProps, { fetchCategories, fetchUnits, fetchTransactions, fetchProducts  })(withStyles(styles)(Dashboard))

@@ -1,11 +1,22 @@
 import React from 'react'
+import { Chip, makeStyles } from '@material-ui/core'
 
+
+const useStyles = makeStyles(theme => ({
+    unit: {
+        margin: theme.spacing(1),
+        cursor: 'pointer',
+    },
+}))
 
 const Unit = ({ unit }) => {
+    const classes = useStyles()
+
     return (
-        <div className="unit">
-            <span className="unit-name">{unit.name}</span>
-        </div>
+        <Chip
+            className={classes.unit}
+            label={unit.name}
+        />
     )
 }
 

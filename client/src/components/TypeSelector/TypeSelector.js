@@ -1,6 +1,6 @@
 import React from 'react'
 import { AttachMoney as AttachMoneyIcon, MoneyOff as MoneyOffIcon } from '@material-ui/icons'
-import { Input, makeStyles, Typography } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 import Type from './Type'
 
 

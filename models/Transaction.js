@@ -6,9 +6,9 @@ const ProductSchema = require('./Product');
 
 
 const TransactionSchema = new Schema({
-    user: {
+    account: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Account',
         required: true,
     },
     category: {
@@ -35,7 +35,7 @@ const TransactionSchema = new Schema({
 }, { versionKey: false, timestamps: false });
 
 TransactionSchema.statics = {
-    validateCreate: function (user, category, unit, performedOn, productList) {
+    validateCreate: function (account, category, unit, performedOn, productList) {
         return new Promise(async (resolve, reject) => {
             const errors = {}
             let categoryObj, unitObj;
@@ -55,7 +55,7 @@ TransactionSchema.statics = {
                 const multiplier = categoryObj.type === 'INCOME' ? 1 : -1;
                 return resolve(
                     this({
-                        user, category, unit, performedOn,
+                        account, category, unit, performedOn,
                         value: productList.reduce((sum, p) => Number(sum) + Math.abs(Number(p.value)), 0) * multiplier,
                         productList: productList
                             .filter(p => p.value)

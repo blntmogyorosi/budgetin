@@ -1,7 +1,6 @@
 import React from 'react'
 
 import TransactionForm from '../../components/TransactionForm/TransactionForm'
-import { SmallContainer } from '../../hoc/Container'
 
 
 class TransactionFormPage extends React.Component {

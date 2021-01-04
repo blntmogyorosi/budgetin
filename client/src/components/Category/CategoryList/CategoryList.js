@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const CategoryList = ({ categories, isWidget = false }) => {
+const CategoryList = ({ categories }) => {
     const classes = useStyles()
 
     return (

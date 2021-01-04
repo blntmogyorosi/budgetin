@@ -1,16 +1,30 @@
 import React from 'react'
-import { Button } from '@material-ui/core'
+import { Button, makeStyles } from '@material-ui/core'
 
 
-import './Title.scss'
+const useStyles = makeStyles(theme => ({
+    title: {
+        display: 'flex',
+        flexFlow: 'nowrap row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 0,
+        marginBottom: theme.spacing(2),
+        '& > h1, & > h2, & > h3, & > h4, & > h5, & > h6': {
+            padding: 0,
+            margin: 0,
+        },
+    },
+}))
 
+const Title = ({ children, component: Component = 'h1', button }) => {
+    const classes = useStyles()
 
-const Title = ({ children, component, button }) => {
     return (
-        <div className="title">
-            <h1 className={component}>
+        <div className={classes.title}>
+            <Component>
                 {children}
-            </h1>
+            </Component>
             {button &&
                 <Button {...button} />
             }

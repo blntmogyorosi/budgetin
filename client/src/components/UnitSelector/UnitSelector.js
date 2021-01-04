@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Grid, GridList, GridListTile, Icon, Input, makeStyles } from '@material-ui/core'
+import { Grid, Input, makeStyles } from '@material-ui/core'
 import Modal from '../Modal/Modal'
 
 

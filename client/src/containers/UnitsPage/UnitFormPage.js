@@ -1,7 +1,6 @@
 import React from 'react'
 
 import UnitsPage from '.'
-import { SmallContainer } from '../../hoc/Container'
 import UnitForm from '../../components/Unit/UnitForm/UnitForm'
 
 
@@ -11,9 +10,9 @@ class UnitFormPage extends React.Component {
 
     render() {
         return (
-            <SmallContainer>
+            <React.Fragment>
                 <UnitForm onReady={() => this.props.history.push(`${UnitsPage.routeName}`)} />
-            </SmallContainer>
+            </React.Fragment>
         )
     }
 

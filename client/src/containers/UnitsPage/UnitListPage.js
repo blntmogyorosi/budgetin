@@ -2,12 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
-import { SmallContainer } from '../../hoc/Container'
 import UnitsPage from '.'
 import UnitFormPage from './UnitFormPage'
 import Title from '../../components/Title/Title'
 import UnitList from '../../components/Unit/UnitList/UnitList'
 import { fetchUnits } from '../../redux/actions/unitsActions'
+import { Paper } from '@material-ui/core'
 
 
 class UnitListPage extends React.Component {
@@ -20,12 +20,17 @@ class UnitListPage extends React.Component {
 
     render() {
         return (
-            <SmallContainer>
-                <Title component="h2" button={{ label: 'New Unit', onClick: () => this.props.history.push(`${UnitsPage.routeName}${UnitFormPage.routeName}`) }}>
+            <React.Fragment>
+                <Title
+                    component="h2"
+                    button={{ children: 'New Unit', onClick: () => this.props.history.push(`${UnitsPage.routeName}${UnitFormPage.routeName}`), color: 'primary', variant: 'contained' }}
+                >
                     Units
                 </Title>
-                <UnitList units={this.props.units.list} />
-            </SmallContainer>
+                <Paper>
+                    <UnitList units={this.props.units.list} />
+                </Paper>
+            </React.Fragment>
         )
     }
 

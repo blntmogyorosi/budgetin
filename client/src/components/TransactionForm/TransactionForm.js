@@ -2,12 +2,14 @@ import React from 'react'
 import moment from 'moment'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Button, Grid, Input, InputAdornment, Paper, TextField, Typography, withStyles } from '@material-ui/core'
+import { Button, Grid, InputAdornment, Paper, Typography, withStyles } from '@material-ui/core'
 
 import IconSelector from '../IconSelector/IconSelector'
 import TypeSelector from '../TypeSelector/TypeSelector'
 import MyTextField from '../MyTextField/MyTextField'
 import UnitSelector from '../UnitSelector/UnitSelector'
+import { saveTransaction } from '../../redux/actions/transactionsActions'
+import TransactionsPage from '../../containers/TransactionsPage'
 
 
 const styles = theme => ({
@@ -102,12 +104,18 @@ class TransactionForm extends React.Component {
 
     onFormSubmit = (e) => {
         e.preventDefault()
-        // this.props.saveCategory(
-        //     this.state,
-        //     (category) => {
-        //         if (this.props.onReady) this.props.onReady(category)
-        //     }
-        // )
+        const { form } = this.state
+        this.props.saveTransaction(
+            {
+                category: form.category.value,
+                unit: form.unit.value,
+                performedOn: form.performedOn.value,
+                productList: form.productList.map(p => ({ name: p.name.value, value: p.value.value }))
+            },
+            (transaction) => {
+                this.props.history.push(`${TransactionsPage.routeName}/${transaction._id}`)
+            }
+        )
     }
 
     onProductListAdd = (e) => {
@@ -162,9 +170,9 @@ class TransactionForm extends React.Component {
     }
 
     renderInput = (input) => {
-        const { grid, component: Component, ...props } = input
+        const { grid, key, component: Component, ...props } = input
         return (
-            <Grid item {...grid} className={this.props.classes.gridItem}>
+            <Grid item {...grid} className={this.props.classes.gridItem} key={key}>
                 <Component
                     {...props}
                 />
@@ -182,8 +190,8 @@ class TransactionForm extends React.Component {
                     </Typography>
                     :
                     productList.map((p, i) => (
-                        <Grid key={`productList_${i}`} item xs={12} className={this.props.classes.inputListItem}>
-                            {Object.entries(p).map(([id, input]) => this.renderInput(input))}
+                        <Grid key={`productList_${i}`} container className={this.props.classes.inputListItem}>
+                            {Object.entries(p).map(([id, input]) => this.renderInput({ ...input, key: `productList_${i}_${id}`, id: `productList_${i}_${id}`, }))}
                         </Grid>
                     ))}
             </Grid>
@@ -209,7 +217,7 @@ class TransactionForm extends React.Component {
                         </Grid>
                         <Grid item xs={12}>
                             <Grid item xs={12} className={classes.gridItem}>
-                                <Button type="button" color="primary" variant="contained" onClick={this.onProductListAdd} fullWidth>
+                                <Button type="submit" color="primary" variant="contained" onClick={this.onProductListAdd} fullWidth>
                                     Add Product
                                 </Button>
                             </Grid>
@@ -218,7 +226,7 @@ class TransactionForm extends React.Component {
                             {this.renderProductListInput()}
                         </Grid>
                     </Grid>
-                    <Button type="submit" color="primary" variant="contained" onClick={this.onFormSubmit}>
+                    <Button type="button" color="primary" variant="contained" onClick={this.onFormSubmit}>
                         Save
                     </Button>
                     <Button type="button" variant="contained" onClick={() => this.props.history.goBack()}>
@@ -237,4 +245,4 @@ const mapStateToProps = state => ({
     units: state.units,
 })
 
-export default connect(mapStateToProps, {})(withRouter(withStyles(styles)(TransactionForm)))
+export default connect(mapStateToProps, { saveTransaction })(withRouter(withStyles(styles)(TransactionForm)))

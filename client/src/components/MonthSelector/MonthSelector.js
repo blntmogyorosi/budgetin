@@ -1,6 +1,10 @@
 import React from 'react'
-import { IconButton, makeStyles, Paper } from '@material-ui/core'
-import { ArrowLeft as ArrowLeftIcon, ArrowRight as ArrowRightIcon } from '@material-ui/icons'
+import { connect } from 'react-redux'
+import moment from 'moment'
+import { Icon, IconButton, makeStyles, Paper } from '@material-ui/core'
+
+import BalanceBlock from './BalanceBlock'
+import { previousMonth, nextMonth } from '../../redux/actions/dateActions'
 
 
 const useStyles = makeStyles(theme => ({
@@ -11,60 +15,74 @@ const useStyles = makeStyles(theme => ({
         alignContent: 'center',
         alignItems: 'center',
         width: '100%',
+        padding: `${theme.spacing(2)}px 0`,
         marginBottom: theme.spacing(4),
+    },
+    arrow: {
+        '& span': {
+            fontSize: theme.spacing(4),
+        },
     },
     balance: {
         flex: 1,
         display: 'flex',
         flexFlow: 'nowrap row',
     },
-    balanceBlock: {
-        flex: 1,
-    },
 }))
 
-const MonthSelector = ({ month, year, monthlyExpense, monthlyIncome, totalExpense, totalIncome, previousMonth, nextMonth }) => {
+const MonthSelector = ({ date, transactions, previousMonth, nextMonth, }) => {
     const classes = useStyles()
+
+    const monthlyTransactions = transactions.dictionary[`${date.year}-${date.month}`] || []
+    const allTransactions = Object.values(transactions.dictionary).reduce((all, month) => ([...all, ...month]), [])
+
     return (
         <Paper className={classes.monthSelector}>
-            <IconButton onClick={previousMonth}>
-                <ArrowLeftIcon />
+            <IconButton onClick={previousMonth} className={classes.arrow}>
+                <Icon>arrow_left</Icon>
             </IconButton>
             <div className={classes.balance}>
-                <div className={classes.balanceBlock}>
-                    <div className="">
-                        {month} - {year}
-                    </div>
-                    <div className="">
-                        Expense: {monthlyExpense}
-                    </div>
-                    <div className="">
-                        Income: {monthlyIncome}
-                    </div>
-                    <div className="">
-                        {monthlyIncome + monthlyExpense}
-                    </div>
-                </div>
-                <div className={classes.balanceBlock}>
-                    <div className="">
-                        All Time
-                    </div>
-                    <div className="">
-                        Expense: {totalExpense}
-                    </div>
-                    <div className="">
-                        Income: {totalIncome}
-                    </div>
-                    <div className="">
-                        {totalIncome - totalExpense}
-                    </div>
-                </div>
+                <BalanceBlock
+                    title={moment(`${date.year}-${date.month}`).format("MMMM, YYYY")}
+                    income={
+                        monthlyTransactions.reduce((sum, t) => {
+                            if (t.category.type === "INCOME") return sum + t.value
+                            else return sum
+                        }, 0)
+                    }
+                    expense={
+                        monthlyTransactions.reduce((sum, t) => {
+                            if (t.category.type === "EXPENSE") return sum + t.value
+                            else return sum
+                        }, 0)
+                    }
+                />
+                <BalanceBlock
+                    title="All Time"
+                    income={
+                        allTransactions.reduce((sum, t) => {
+                            if (t.category.type === "INCOME") return sum + t.value
+                            else return sum
+                        }, 0)
+                    }
+                    expense={
+                        allTransactions.reduce((sum, t) => {
+                            if (t.category.type === "EXPENSE") return sum + t.value
+                            else return sum
+                        }, 0)
+                    }
+                />
             </div>
-            <IconButton onClick={nextMonth}>
-                <ArrowRightIcon />
+            <IconButton onClick={nextMonth} className={classes.arrow}>
+                <Icon>arrow_right</Icon>
             </IconButton>
         </Paper>
     )
 }
 
-export default MonthSelector
+const mapStateToProps = state => ({
+    date: state.date,
+    transactions: state.transactions,
+})
+
+export default connect(mapStateToProps, { previousMonth, nextMonth })(MonthSelector)

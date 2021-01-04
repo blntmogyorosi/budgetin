@@ -2,9 +2,9 @@ const { Schema, model } = require('mongoose');
 
 
 const UnitSchema = new Schema({
-    user: {
+    account: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Account',
         required: true,
     },
     name: {
@@ -15,9 +15,9 @@ const UnitSchema = new Schema({
 }, { versionKey: false, timestamps: false });
 
 UnitSchema.statics = {
-    validateCreate: function (name, user) {
+    validateCreate: function (name, account) {
         return this
-            .find({ user })
+            .find({ account })
             .then(units => {
                 const errors = {};
                 
@@ -27,7 +27,7 @@ UnitSchema.statics = {
                 if (units.filter(u => u.name === name).length > 0) errors.name = `Unit name '${name}' is used already!`;
 
                 if (Object.keys(errors).length > 0) throw errors;
-                else return this({ name, user });
+                else return this({ name, account });
             })
     }
 }

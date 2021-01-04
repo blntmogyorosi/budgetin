@@ -10,9 +10,9 @@ const Product = require('../models/Product');
  * @param {Date} to To DateTime
  * @returns Promise<List<Transaction>>
  */
-const getTransactions = (user, from, to) => {
+const getTransactions = (account, from, to) => {
     return Transaction
-        .find({ user, performedOn: { $gte: from, $lte: to || moment().format("YYYY-MM-DD") } })
+        .find({ account, performedOn: { $gte: from, $lte: to || moment().format("YYYY-MM-DD") } })
         .populate(['category', 'unit'])
         .sort({ performedOn: -1 })
         .then(transactions => {
@@ -29,6 +29,7 @@ const getTransactions = (user, from, to) => {
                     unit: transaction.unit.name,
                     value: transaction.value,
                     performedOn: transaction.performedOn,
+                    productList: transaction.productList,
                 };
                 if (!Object.keys(formattedTransactions).includes(performDate))
                     formattedTransactions[performDate] = [formattedTransaction]
@@ -39,9 +40,9 @@ const getTransactions = (user, from, to) => {
         });
 };
 
-const getTransaction = (user, _id) => {
+const getTransaction = (account, _id) => {
     return Transaction
-        .findOne({ _id, user })
+        .findOne({ _id, account })
         .populate(['category', 'unit']);
 }
 

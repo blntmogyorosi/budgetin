@@ -2,9 +2,9 @@ const { Schema, model } = require('mongoose');
 
 
 const CategorySchema = new Schema({
-    user: {
+    account: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Account',
         required: true,
     },
     name: {
@@ -30,9 +30,9 @@ const CategorySchema = new Schema({
 }, { versionKey: false, timestamps: false });
 
 CategorySchema.statics = {
-    validateCreate: function (name, icon, color, type, user) {
+    validateCreate: function (name, icon, color, type, account) {
         return this
-            .find({ user })
+            .find({ account })
             .then(categories => {
                 const errors = {}
 
@@ -53,7 +53,7 @@ CategorySchema.statics = {
                 if (!['EXPENSE', 'INCOME'].includes(type)) errors.type = 'Category type must be EXPENSE or INCOME!';
 
                 if (Object.keys(errors).length > 0) throw errors;
-                else return this({name, icon, color, type, user });
+                else return this({name, icon, color, type, account });
             })
     }
 }

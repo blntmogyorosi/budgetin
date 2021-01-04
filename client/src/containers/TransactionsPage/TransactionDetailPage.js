@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { SmallContainer } from '../../hoc/Container'
 import TransactionDetail from '../../components/Transaction/TransactionDetail/TransactionDetail'
 import { fetchTransaction } from '../../redux/actions/transactionsActions'
 
@@ -26,7 +25,6 @@ class TransactionListPage extends React.Component {
     }
 
     render() {
-        const { transactions } = this.props
         return (
             <React.Fragment>
                 <TransactionDetail transaction={this.state.transaction} />

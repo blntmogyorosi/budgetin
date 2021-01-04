@@ -1,30 +1,18 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { Grid } from '@material-ui/core'
 
-import Units from '../../../containers/Units'
 import Unit from '../Unit/Unit'
-import { Box, BoxFooter, BoxHeader } from '../../Box'
 
 
-const UnitList = ({ units, isWidget }) => {
+const UnitList = ({ units }) => {
     return (
-        <Box className="unit-list-container">
-            {isWidget &&
-                <BoxHeader>
-                    Units
-                </BoxHeader>
-            }
-            <div className="unit-list">
-                {units.map(unit => (
-                    <Unit key={unit._id} unit={unit} />
-                ))}
-            </div>
-            {isWidget &&
-                <BoxFooter>
-                    <NavLink to={Units.routeName}>See all</NavLink>
-                </BoxFooter>
-            }
-        </Box>
+        <Grid container>
+            {units.map(unit => (
+                <Grid key={unit._id} item>
+                    <Unit unit={unit} />
+                </Grid>
+            ))}
+        </Grid>
     )
 }
 

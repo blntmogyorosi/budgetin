@@ -1,10 +1,10 @@
 import React from 'react'
-import { Avatar, Icon, List, ListItem, ListItemAvatar, ListItemText, Paper } from '@material-ui/core'
+import { List, ListItem, ListItemText, Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import moment from 'moment'
 import { withRouter } from 'react-router-dom'
 import TransactionsPage from '../../containers/TransactionsPage'
-import Value from '../Value/Value'
+import Transaction from '../Transaction/Transaction/Transaction'
 
 
 const useStyles = makeStyles(theme => ({
@@ -48,32 +48,9 @@ const TransactionList = ({ transactions, history }) => {
         )
     }
 
-    const TransactionItem = ({ transaction }) => {
-        return (
-            <ListItem
-                className={classes.transactionItem}
-                style={{ color: transaction.category.color }}
-                onClick={() => history.push(`${TransactionsPage.routeName}/${transaction._id}`)}
-            >
-                <ListItemAvatar>
-                    <Icon style={{ color: transaction.category.color }}>
-                        {transaction.category.icon}
-                    </Icon>
-                </ListItemAvatar>
-                <ListItemText
-                    primary={transaction.category.name}
-                    secondary={transaction.unit}
-                />
-                <Value
-                    value={transaction.value}
-                />
-            </ListItem>
-        )
-    }
-
     let performedOn
     const list = []
-    
+
     for (let transaction of transactions) {
         if (transaction.performedOn !== performedOn) {
             performedOn = transaction.performedOn
@@ -85,9 +62,10 @@ const TransactionList = ({ transactions, history }) => {
             )
         }
         list.push(
-            <TransactionItem
+            <Transaction
                 key={transaction._id}
                 transaction={transaction}
+                onClick={() => history.push(`${TransactionsPage.routeName}/${transaction._id}`)}
             />
         )
     }

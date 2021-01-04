@@ -34,7 +34,7 @@ const App = () => {
                 <UnauthenticatedRoute path={Register.routeName} component={Register} />
                 <UnauthenticatedRoute path={LogIn.routeName} component={LogIn} />
                 <AuthenticatedRoute path={Dashboard.routeName} component={Dashboard} />
-                <AuthenticatedRoute path={CategoriesPage.routeName} component={CategoriesPage} />
+                <AuthenticatedRoute path={'/categories'} component={CategoriesPage} />
                 <AuthenticatedRoute path={UnitsPage.routeName} component={UnitsPage} />
                 <AuthenticatedRoute path={TransactionsPage.routeName} component={TransactionsPage} />
             </Switch>

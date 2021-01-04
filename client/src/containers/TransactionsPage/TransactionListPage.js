@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
-import { SmallContainer } from '../../hoc/Container'
 import TransactionsPage from '.'
 import TransactionFormPage from './TransactionFormPage'
 import Title from '../../components/Title/Title'
@@ -19,6 +18,8 @@ class TransactionListPage extends React.Component {
     }
 
     render() {
+        const { date } = this.props
+
         return (
             <React.Fragment>
                 <Title
@@ -27,7 +28,7 @@ class TransactionListPage extends React.Component {
                 >
                     Transactions
                 </Title>
-                <TransactionList transactions={this.props.transactions.dictionary["2020-11"] || []} />
+                <TransactionList transactions={this.props.transactions.dictionary[`${date.year}-${date.month}`] || []} />
             </React.Fragment>
         )
     }
@@ -35,6 +36,7 @@ class TransactionListPage extends React.Component {
 }
 
 const mapStateToProps = state => ({
+    date: state.date,
     transactions: state.transactions,
 })
 

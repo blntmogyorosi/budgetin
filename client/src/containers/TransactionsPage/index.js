@@ -6,28 +6,30 @@ import UserLayout from '../../hoc/Layout/UserLayout'
 import TransactionListPage from './TransactionListPage'
 import TransactionFormPage from './TransactionFormPage'
 import TransactionDetailPage from './TransactionDetailPage'
-import { Grid, withStyles } from '@material-ui/core'
+import { Grid, makeStyles, useMediaQuery } from '@material-ui/core'
+import MonthSelector from '../../components/MonthSelector/MonthSelector'
 
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
     firstCol: {
         paddingRight: theme.spacing(1),
     },
     secondCol: {
         paddingLeft: theme.spacing(1),
     },
-})
+}))
 
-class TransactionsPage extends React.Component {
+const TransactionsPage = ({ match }) => {
+    const isDesktopView = useMediaQuery(theme => theme.breakpoints.up('md'))
+    const classes = useStyles()
 
-    static routeName = '/transactions'
-
-    render() {
-        const { match, classes } = this.props
-
-        return (
-            <UserLayout>
+    return (
+        <UserLayout>
+            {isDesktopView ?
                 <Grid container>
+                    <Grid item xs={12}>
+                        <MonthSelector />
+                    </Grid>
                     <Grid item xs={12} md={6} className={classes.firstCol}>
                         <AuthenticatedRoute path={`${match.url}${TransactionListPage.routeName}`} component={TransactionListPage} />
                     </Grid>
@@ -38,10 +40,21 @@ class TransactionsPage extends React.Component {
                         </Switch>
                     </Grid>
                 </Grid>
-            </UserLayout>
-        )
-    }
-
+                :
+                <Grid container>
+                    <Grid item xs={12}>
+                        <Switch>
+                            <AuthenticatedRoute path={`${match.url}${TransactionListPage.routeName}`} component={TransactionListPage} exact />
+                            <AuthenticatedRoute path={`${match.url}${TransactionFormPage.routeName}`} component={TransactionFormPage} />
+                            <AuthenticatedRoute path={`${match.url}${TransactionDetailPage.routeName}`} component={TransactionDetailPage} />
+                        </Switch>
+                    </Grid>
+                </Grid>
+            }
+        </UserLayout>
+    )
 }
 
-export default withStyles(styles)(TransactionsPage)
+TransactionsPage.routeName = '/transactions'
+
+export default TransactionsPage

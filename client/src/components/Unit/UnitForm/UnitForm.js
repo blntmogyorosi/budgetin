@@ -2,12 +2,25 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import Input from '../../Form/Input/Input'
-import Button from '../../Form/Button/Button'
 import { saveUnit } from '../../../redux/actions/unitsActions'
 import { resetErrors } from '../../../redux/actions/errorsAction'
-import { Box, BoxHeader, BoxFooter } from '../../Box'
+import { Button, Grid, Paper, Typography, withStyles } from '@material-ui/core'
+import MyTextField from '../../MyTextField/MyTextField'
 
+
+const styles = theme => ({
+    paper: {
+        padding: theme.spacing(4),
+        marginBottom: theme.spacing(4),
+    },
+    title: {
+        marginBottom: theme.spacing(4),
+        textAlign: 'center',
+    },
+    gridItem: {
+        marginBottom: theme.spacing(2),
+    },
+})
 
 class UnitForm extends React.Component {
 
@@ -16,10 +29,15 @@ class UnitForm extends React.Component {
         this.state = {
             form: {
                 name: {
+                    component: MyTextField,
+                    id: 'name',
+                    name: 'name',
                     type: 'text',
                     label: 'Name',
                     value: '',
                     onChange: this.onInputChange,
+                    fullWidth: true,
+                    variant: "outlined",
                 },
             },
         }
@@ -43,37 +61,37 @@ class UnitForm extends React.Component {
             Object.entries(this.state.form).reduce((data, [id, input]) => { data[id] = input.value; return data; }, {}),
             (unit) => {
                 if (this.props.onReady) this.props.onReady(unit)
-            }    
+            }
         )
     }
 
     render() {
-        const { unit, errors } = this.props
+        const { unit, errors, classes } = this.props
 
         return (
-            <Box className="category-form">
+            <Paper className={classes.paper}>
                 <form>
-                    <BoxHeader>
+                    <Typography variant="h4" component="h4" className={classes.title}>
                         {unit && unit._id ? 'Edit Unit' : 'New Unit'}
-                    </BoxHeader>
-                    {Object.entries(this.state.form).map(([id, input]) => (
-                        <Input
-                            key={id}
-                            id={id}
-                            {...input}
-                            error={errors[id]}
-                        />
-                    ))}
-                    <BoxFooter>
-                        <Button type="submit" onClick={this.onFormSubmit}>
-                            Save
-                        </Button>
-                        <Button type="button" skin="light" onClick={() => this.props.history.goBack()}>
-                            Cancel
-                        </Button>
-                    </BoxFooter>
+                    </Typography>
+                    <Grid container>
+                        {Object.entries(this.state.form).map(([id, { component: Component, ...input }]) => (
+                            <Grid item xs={12} className={classes.gridItem} key={id}>
+                                <Component
+                                    {...input}
+                                    error={errors[id]}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                    <Button type="submit" color="primary" variant="contained" onClick={this.onFormSubmit}>
+                        Save
+                    </Button>
+                    <Button type="button" variant="contained" onClick={() => this.props.history.goBack()}>
+                        Cancel
+                    </Button>
                 </form>
-            </Box>
+            </Paper>
         )
     }
 
@@ -83,4 +101,4 @@ const mapStateToProps = state => ({
     errors: state.errors,
 })
 
-export default connect(mapStateToProps, { saveUnit, resetErrors })(withRouter(UnitForm))
+export default connect(mapStateToProps, { saveUnit, resetErrors })(withRouter(withStyles(styles)(UnitForm)))

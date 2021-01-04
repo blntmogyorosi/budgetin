@@ -26,8 +26,8 @@ const styles = theme => ({
 })
 
 const iconList = [
-    { value: 'shopping_cart', name: 'shopping_cart', label: 'Groceries', color: 'red' },
-    { value: 'receipt_long', name: 'receipt_long' }
+    { value: 'shopping_cart', name: 'shopping_cart' },
+    { value: 'receipt_long', name: 'receipt_long' },
 ]
 
 class CategoryForm extends React.Component {
@@ -62,7 +62,7 @@ class CategoryForm extends React.Component {
                     name: 'icon',
                     value: '',
                     onChange: this.onInputChange,
-                    icons: iconList,
+                    icons: process.env.ICON_LIST ? process.env.ICON_LIST.split(',').map(i => ({ value: i, name: i })) : iconList,
                     color: '#000000',
                     grid: {
                         xs: 12,
