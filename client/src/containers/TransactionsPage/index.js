@@ -43,6 +43,9 @@ const TransactionsPage = ({ match }) => {
                 :
                 <Grid container>
                     <Grid item xs={12}>
+                        <MonthSelector />
+                    </Grid>
+                    <Grid item xs={12}>
                         <Switch>
                             <AuthenticatedRoute path={`${match.url}${TransactionListPage.routeName}`} component={TransactionListPage} exact />
                             <AuthenticatedRoute path={`${match.url}${TransactionFormPage.routeName}`} component={TransactionFormPage} />
