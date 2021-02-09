@@ -30,7 +30,7 @@ const iconList = [
     { value: 'receipt_long', name: 'receipt_long' },
 ]
 
-const ICON_LIST = 'credit_card,shopping_cart,home,fastfood,health_and_safety,card_giftcard,school,input,savings,sports_esports,outlet,restaurant,commute,receipt_long'
+const ICON_LIST = 'credit_card,shopping_cart,home,fastfood,health_and_safety,card_giftcard,school,input,savings,sports_esports,outlet,restaurant,commute,receipt_long,account_balance_wallet,fitness_center'
 
 class CategoryForm extends React.Component {
 

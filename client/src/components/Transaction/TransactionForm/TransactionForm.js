@@ -1,117 +1,120 @@
 import React from 'react'
+import moment from 'moment'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { Button, Grid, InputAdornment, Paper, Typography, withStyles } from '@material-ui/core'
 
-import { Box, BoxHeader, BoxFooter } from '../../Box'
-import TransactionsPage from '../../../containers/TransactionsPage'
-import Button from '../../Form/Button/Button'
-import { fetchCategories } from '../../../redux/actions/categoriesActions'
-import { fetchUnits } from '../../../redux/actions/unitsActions'
+import IconSelector from '../../IconSelector/IconSelector'
+import TypeSelector from '../../TypeSelector/TypeSelector'
+import MyTextField from '../../MyTextField/MyTextField'
+import UnitSelector from '../../UnitSelector/UnitSelector'
 import { saveTransaction } from '../../../redux/actions/transactionsActions'
+import TransactionsPage from '../../../containers/TransactionsPage'
 
-import './TransactionForm.scss'
-import { Input, TextField } from '@material-ui/core'
 
+const styles = theme => ({
+    paper: {
+        padding: theme.spacing(4),
+        marginBottom: theme.spacing(4),
+    },
+    title: {
+        marginBottom: theme.spacing(4),
+        textAlign: 'center',
+    },
+    gridItem: {
+        marginBottom: theme.spacing(2),
+    },
+    inputListItem: {
+        marginBottom: theme.spacing(1),
+    }
+})
 
 class TransactionForm extends React.Component {
-
-    componentDidMount() {
-        this.props.fetchCategories()
-        this.props.fetchUnits()
-    }
 
     constructor(props) {
         super(props)
         this.state = {
             form: {
-                category: {
-                    type: 'radio',
-                    label: 'Category',
+                type: {
+                    component: TypeSelector,
+                    id: 'type',
+                    name: 'type',
                     value: '',
                     onChange: this.onInputChange,
-                    options: this.props.categories.list.map(c => ({ value: c._id, label: c.name })),
+                    grid: {
+                        xs: 12,
+                    },
+                },
+                category: {
+                    component: IconSelector,
+                    id: 'category',
+                    name: 'category',
+                    value: '',
+                    onChange: this.onInputChange,
+                    icons: [],
+                    grid: {
+                        xs: 12,
+                    },
                 },
                 unit: {
-                    type: 'radio',
-                    label: 'Unit',
+                    component: UnitSelector,
+                    id: 'unit',
+                    name: 'unit',
                     value: '',
                     onChange: this.onInputChange,
-                    options: this.props.units.list.map(u => ({ value: u._id, label: u.name })),
+                    units: [],
+                    grid: {
+                        xs: 12
+                    },
                 },
                 performedOn: {
+                    component: MyTextField,
+                    id: 'performedOn',
                     type: 'date',
-                    label: 'Perform Date',
-                    value: '',
+                    name: 'performedOn',
+                    variant: 'outlined',
+                    label: 'Performed On',
+                    value: moment().format('YYYY-MM-DD'),
                     onChange: this.onInputChange,
+                    fullWidth: true,
+                    grid: {
+                        xs: 12,
+                    },
                 },
                 productList: [],
-            }
+            },
         }
     }
 
     static getDerivedStateFromProps(props, state) {
-        if (state.form.category.options.length === 0)
-            state.form.category.options = props.categories.list.map(c => ({ value: c._id, label: c.name }))
-        if (state.form.unit.options.length === 0)
-            state.form.unit.options = props.units.list.map(u => ({ value: u._id, label: u.name }))
+        if (state.form.category.icons.length === 0)
+            state.form.category.icons = props.categories.list.map(c => ({ value: c._id, name: c.icon, label: c.name, color: c.color }))
+        if (state.form.unit.units.length === 0)
+            state.form.unit.units = props.units.list.map(u => ({ value: u._id, label: u.name }))
         return state
     }
 
-    renderCategorySelectInput = () => {
-        return (
-            <div className="category-select-input">
-                <Input
-                    id="category" {...this.state.form.category}
-                />
-            </div>
-        )
+    onInputChange = (e) => {
+        const { name, value } = e.target
+        const { form } = this.state
+        form[name].value = value
+        this.setState({ form })
     }
 
-    renderUnitSelectInput = () => {
-        return (
-            <div className="unit-select-input">
-                <Input
-                    id="unit" {...this.state.form.unit}
-                />
-            </div>
-        )
-    }
 
-    renderPerformDateInput = () => {
-        return (
-            <div className="perform-date-input">
-                <TextField
-                    id="performedOn" {...this.state.form.performedOn}
-                />
-            </div>
-        )
-    }
-
-    renderProductListInput = () => {
-        const { productList } = this.state.form
-        return (
-            <div className="product-list-input">
-                <Button type="submit" onClick={this.onProductListAdd}>
-                    Add product
-                </Button>
-                {productList.length > 0 ?
-                    productList.map((p, i) => (
-                        <div key={`productList_${i}`} className="product-list-item">
-                            {Object.entries(p).map(([id, input]) => (
-                                <Input
-                                    key={`productList_${i}_${id}`}
-                                    id={`productList_${i}_${id}`}
-                                    {...input}
-                                />
-                            ))}
-                        </div>
-                    ))
-                    :
-                    <div>
-                        No products have been added yet to this transaction.
-                    </div>
-                }
-            </div>
+    onFormSubmit = (e) => {
+        e.preventDefault()
+        const { form } = this.state
+        this.props.saveTransaction(
+            {
+                category: form.category.value,
+                unit: form.unit.value,
+                performedOn: form.performedOn.value,
+                productList: form.productList.map(p => ({ name: p.name.value, value: p.value.value }))
+            },
+            (transaction) => {
+                this.props.history.push(`${TransactionsPage.routeName}/${transaction._id}`)
+            }
         )
     }
 
@@ -128,15 +131,30 @@ class TransactionForm extends React.Component {
         form.productList.push(
             {
                 name: {
-                    label: 'Name',
+                    component: MyTextField,
+                    type: 'text',
+                    placeholder: 'Name',
                     value: '',
                     onChange: this.onProductListChange,
                     autoFocus: true,
+                    fullWidth: true,
+                    grid: {
+                        xs: 6,
+                    },
                 },
                 value: {
-                    label: 'Value',
+                    component: MyTextField,
+                    type: 'number',
+                    placeholder: 'Value',
                     value: '',
                     onChange: this.onProductListChange,
+                    InputProps: {
+                        endAdornment: <InputAdornment position="end">Ft</InputAdornment>,
+                    },
+                    fullWidth: true,
+                    grid: {
+                        xs: 6,
+                    },
                 },
             }
         )
@@ -151,49 +169,71 @@ class TransactionForm extends React.Component {
         this.setState({ form })
     }
 
-    onInputChange = (e) => {
-        const { id, value } = e.target
-        const form = Object.assign(this.state.form)
-        form[id].value = value
-        this.setState({ form })
-        this.forceUpdate()
+    renderInput = (input) => {
+        const { grid, key, component: Component, ...props } = input
+        return (
+            <Grid item {...grid} className={this.props.classes.gridItem} key={key}>
+                <Component
+                    {...props}
+                />
+            </Grid>
+        )
     }
 
-    onFormSubmit = (e) => {
-        e.preventDefault()
-        const { form } = this.state
-        const data = {
-            category: form.category.value,
-            unit: form.unit.value,
-            performedOn: form.performedOn.value,
-            productList: form.productList.map(p => ({ name: p.name.value, value: p.value.value }))
-        }
-        this.props.saveTransaction(data, (transaction) => this.props.history.push(`${TransactionsPage.routeName}/${transaction._id}`))
+    renderProductListInput = () => {
+        const { productList } = this.state.form
+        return (
+            <Grid item xs={12} className={this.props.classes.gridItem}>
+                {productList.length === 0 ?
+                    <Typography component="p" variant="body1">
+                        No products have been added yet to this transaction
+                    </Typography>
+                    :
+                    productList.map((p, i) => (
+                        <Grid key={`productList_${i}`} container className={this.props.classes.inputListItem}>
+                            {Object.entries(p).map(([id, input]) => this.renderInput({ ...input, key: `productList_${i}_${id}`, id: `productList_${i}_${id}`, }))}
+                        </Grid>
+                    ))}
+            </Grid>
+        )
     }
 
     render() {
-        const { transaction } = this.props
+        const { category, classes } = this.props
 
         return (
-            <Box className="transaction-form">
+            <Paper className={classes.paper}>
                 <form>
-                    <BoxHeader>
-                        {transaction && transaction._id ? 'Edit Transaction' : 'New Transaction'}
-                    </BoxHeader>
-                    {this.renderCategorySelectInput()}
-                    {this.renderUnitSelectInput()}
-                    {this.renderPerformDateInput()}
-                    {this.renderProductListInput()}
-                    <BoxFooter>
-                        <Button type="submit" onClick={this.onFormSubmit}>
-                            Save
-                        </Button>
-                        <Button type="button" skin="light" onClick={() => this.props.history.goBack()}>
-                            Cancel
-                        </Button>
-                    </BoxFooter>
+                    <Typography variant="h4" component="h4" className={classes.title}>
+                        {category && category._id ? 'Edit Transaction' : 'New Transaction'}
+                    </Typography>
+                    <Grid container>
+                        <Grid item xs={3}>
+                            {this.renderInput(this.state.form.category)}
+                        </Grid>
+                        <Grid item xs={9} style={{ paddingLeft: '8px' }}>
+                            {this.renderInput(this.state.form.unit)}
+                            {this.renderInput(this.state.form.performedOn)}
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Grid item xs={12} className={classes.gridItem}>
+                                <Button type="submit" color="primary" variant="contained" onClick={this.onProductListAdd} fullWidth>
+                                    Add Product
+                                </Button>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={12}>
+                            {this.renderProductListInput()}
+                        </Grid>
+                    </Grid>
+                    <Button type="button" color="primary" variant="contained" onClick={this.onFormSubmit}>
+                        Save
+                    </Button>
+                    <Button type="button" variant="contained" onClick={() => this.props.history.goBack()}>
+                        Cancel
+                    </Button>
                 </form>
-            </Box>
+            </Paper>
         )
     }
 
@@ -205,4 +245,4 @@ const mapStateToProps = state => ({
     units: state.units,
 })
 
-export default connect(mapStateToProps, { saveTransaction, fetchCategories, fetchUnits })(withRouter(TransactionForm))
+export default connect(mapStateToProps, { saveTransaction })(withRouter(withStyles(styles)(TransactionForm)))

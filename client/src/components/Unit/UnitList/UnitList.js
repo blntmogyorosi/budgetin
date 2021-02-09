@@ -9,7 +9,10 @@ const UnitList = ({ units }) => {
         <Grid container>
             {units.map(unit => (
                 <Grid key={unit._id} item>
-                    <Unit unit={unit} />
+                    <Unit
+                        unit={unit}
+                        onClick={() => console.log(`/UnitsPage.routeName/${unit._id}`)}
+                    />
                 </Grid>
             ))}
         </Grid>

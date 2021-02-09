@@ -12,6 +12,7 @@ import { fetchProducts } from '../redux/actions/productsActions'
 import { fetchTransactions } from '../redux/actions/transactionsActions'
 import CategoryChart from '../components/CategoryChart/CategoryChart'
 import MonthSelector from '../components/MonthSelector/MonthSelector'
+import UnitChart from '../components/UnitChart/UnitChart'
 
 
 const styles = theme => ({
@@ -37,48 +38,14 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            year: moment().format('YYYY'),
-            month: moment().format('MM'),
-            monthlyTransactions: {},  // Holds the transactions for the selected month
-            monthlyExpense: 0,
-            monthlyIncome: 0,
-            totalExpense: 0,
-            totalIncome: 0,
         }
     }
 
     componentDidMount() {
         this.props.fetchCategories()
         this.props.fetchUnits()
-        this.props.fetchTransactions(transactions => this.setTransactions(transactions))
+        this.props.fetchTransactions()
         this.props.fetchProducts()
-    }
-
-    setTransactions = (transactions) => {
-        const { year, month } = this.state
-        const monthlyTransactions = {}
-        let monthlyExpense = 0, monthlyIncome = 0, totalExpense = 0, totalIncome = 0
-        for (let [date, transactionList] of Object.entries(transactions)) {
-            if (date.startsWith(`${year}-${month}`)) {
-                monthlyTransactions[date] = transactionList
-                for (let transaction of transactionList) {
-                    if (transaction.value > 0) {
-                        monthlyIncome += transaction.value
-                    } else {
-                        monthlyExpense += transaction.value
-                    }
-                }
-            } else {
-                for (let transaction of transactionList) {
-                    if (transaction.value > 0) {
-                        totalIncome += transaction.value
-                    } else {
-                        totalExpense += transaction.value
-                    }
-                }
-            }
-        }
-        this.setState({ monthlyTransactions, monthlyExpense, monthlyIncome, totalExpense, totalIncome })
     }
 
     render() {
@@ -130,6 +97,17 @@ class Dashboard extends React.Component {
                             </Paper>
                         </Grid>
                     </Grid>
+                    <Grid container>
+                        <Grid item xs={12} md={6} className={classes.firstCol}>
+                            <UnitChart
+                                month={""}
+                                units={""}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6} className={classes.secondCol}>
+
+                        </Grid>
+                    </Grid>
                 </Grid>
 
             </UserLayout>
@@ -146,4 +124,4 @@ const mapStateToProps = state => ({
     products: state.products,
 })
 
-export default connect(mapStateToProps, { fetchCategories, fetchUnits, fetchTransactions, fetchProducts  })(withStyles(styles)(Dashboard))
+export default connect(mapStateToProps, { fetchCategories, fetchUnits, fetchTransactions, fetchProducts })(withStyles(styles)(Dashboard))

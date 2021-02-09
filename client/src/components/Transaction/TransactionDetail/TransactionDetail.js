@@ -1,10 +1,8 @@
-import { Divider, makeStyles, Paper } from '@material-ui/core'
+import { Button, Divider, Grid, makeStyles, Paper } from '@material-ui/core'
 import React from 'react'
 
 import Value from '../../Value/Value'
 import Transaction from '../Transaction/Transaction'
-
-import './TransactionDetail.scss'
 
 
 const useStyles = makeStyles(theme => ({
@@ -26,6 +24,15 @@ const TransactionDetail = ({ transaction }) => {
     return (
         <Paper>
             <Transaction transaction={transaction} single />
+            <Divider />
+            <div className={""}>
+                <Button color="primary">
+                    Edit
+                </Button>
+                <Button color="secondary">
+                    Delete
+                </Button>
+            </div>
             <Divider />
             <div className={""}>
                 {transaction.productList &&

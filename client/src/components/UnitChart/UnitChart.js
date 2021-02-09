@@ -5,9 +5,9 @@ import { makeStyles } from '@material-ui/core/styles'
 
 
 const useStyles = makeStyles(theme => ({
-    categoryChart: {
+    unitChart: {
         width: '100%',
-        overflow: 'hidden'
+        overflow: 'hidden',
     },
     title: {
         paddingTop: theme.spacing(2),
@@ -15,8 +15,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-
-const CategoryChart = ({ month, categories }) => {
+const UnitChart = ({ month, units }) => {
     const classes = useStyles()
 
     const CanvasJSChart = CanvasJSReact.CanvasJSChart
@@ -29,19 +28,19 @@ const CategoryChart = ({ month, categories }) => {
             fontSize: 20,
         }],
         data: [{
-            type: 'doughnut',
+            type: 'dougnut',
             radius: '80%',
             innerRadius: '75%',
             indexLabelFontSize: 12,
             indexLabel: '{name} - {y}',
-            dataPoints: categories,
+            dataPoints: units,
         }]
     }
 
     return (
-        <Paper className={classes.categoryChart}>
+        <Paper className={classes.unitChart}>
             <Typography className={classes.title} variant="h4" component="h4">
-                Categories
+                Units
             </Typography>
             <CanvasJSChart
                 options={options}
@@ -50,4 +49,4 @@ const CategoryChart = ({ month, categories }) => {
     )
 }
 
-export default CategoryChart
+export default UnitChart

@@ -21,8 +21,14 @@ const CategoryList = ({ categories }) => {
     return (
         <GridList className={classes.categoryList} cols={3}>
             {categories.map(category => (
-                <GridListTile key={category._id} className={classes.categoryListTile}>
-                    <Category category={category} />
+                <GridListTile
+                    key={category._id}
+                    className={classes.categoryListTile}
+                >
+                    <Category
+                        category={category}
+                        onClick={() => console.log(`/TransactionsPage.routeName/${category._id}`)}
+                    />
                 </GridListTile>
             ))}
         </GridList>

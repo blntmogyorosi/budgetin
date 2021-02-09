@@ -5,6 +5,7 @@ import moment from 'moment'
 import { withRouter } from 'react-router-dom'
 import TransactionsPage from '../../containers/TransactionsPage'
 import Transaction from '../Transaction/Transaction/Transaction'
+import Value from '../Value/Value'
 
 
 const useStyles = makeStyles(theme => ({
@@ -34,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 const TransactionList = ({ transactions, history }) => {
     const classes = useStyles()
 
-    const TransactionDate = ({ date }) => {
+    const TransactionDate = ({ date, value }) => {
         return (
             <ListItem className={classes.dateItem}>
                 <ListItemText
@@ -44,31 +45,48 @@ const TransactionList = ({ transactions, history }) => {
                     }}
                     primary={moment(date).format('MMMM DD, YYYY')}
                 />
+                <Value value={value} />
             </ListItem>
         )
     }
 
+    const createDateBlock = (performedOn, value, tempList, list) => {
+        list.push(
+            <TransactionDate
+                key={performedOn}
+                date={performedOn}
+                value={value}
+            />
+        )
+        list.push(...tempList)
+        return list
+    }
+
     let performedOn
-    const list = []
+    let tempValue
+    let tempList = []
+    let list = []
 
     for (let transaction of transactions) {
         if (transaction.performedOn !== performedOn) {
+            if (performedOn) {
+                list = createDateBlock(performedOn, tempValue, tempList, list)
+            }
             performedOn = transaction.performedOn
-            list.push(
-                <TransactionDate
-                    key={performedOn}
-                    date={performedOn}
-                />
-            )
+            tempList = []
+            tempValue = 0
         }
-        list.push(
+        tempList.push(
             <Transaction
                 key={transaction._id}
                 transaction={transaction}
                 onClick={() => history.push(`${TransactionsPage.routeName}/${transaction._id}`)}
             />
         )
+        tempValue += transaction.value
     }
+    // Add the last date block
+    createDateBlock(performedOn, tempValue, tempList, list)
 
     return (
         <Paper>
