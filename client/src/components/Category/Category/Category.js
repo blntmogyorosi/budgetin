@@ -18,11 +18,11 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const Category = ({ category }) => {
+const Category = ({ category, onClick }) => {
     const classes = useStyles()
 
     return (
-        <div className={classes.category} style={{ color: category.color }}>
+        <div className={classes.category} style={{ color: category.color }} onClick={onClick}>
             <Icon className={classes.categoryIcon}>{category.icon}</Icon>
             <div className={classes.categoryName}>{category.name}</div>
         </div>

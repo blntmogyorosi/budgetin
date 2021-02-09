@@ -6,6 +6,7 @@ import CategoryListPage from './CategoryListPage'
 import CategoryFormPage from './CategoryFormPage'
 import UserLayout from '../../hoc/Layout/UserLayout'
 import { Grid, makeStyles, useMediaQuery } from '@material-ui/core'
+import CategoryDetailPage from './CategoryDetailPage'
 
 
 const useStyles = makeStyles(theme => ({
@@ -29,7 +30,10 @@ const CategoriesPage = ({ match }) => {
                         <AuthenticatedRoute path={`${match.url}${CategoryListPage.routeName}`} component={CategoryListPage} />
                     </Grid>
                     <Grid item xs={12} md={6} className={classes.secondCol}>
-                        <AuthenticatedRoute path={`${match.url}${CategoryFormPage.routeName}`} component={CategoryFormPage} />
+                        <Switch>
+                            <AuthenticatedRoute path={`${match.url}${CategoryFormPage.routeName}`} component={CategoryFormPage} />
+                            <AuthenticatedRoute path={`${match.url}${CategoryDetailPage.routeName}`} component={CategoryDetailPage} />
+                        </Switch>
                     </Grid>
                 </Grid>
                 :
@@ -38,6 +42,7 @@ const CategoriesPage = ({ match }) => {
                         <Switch>
                             <AuthenticatedRoute path={`${match.url}${CategoryListPage.routeName}`} component={CategoryListPage} exact />
                             <AuthenticatedRoute path={`${match.url}${CategoryFormPage.routeName}`} component={CategoryFormPage} />
+                            <AuthenticatedRoute path={`${match.url}${CategoryDetailPage.routeName}`} component={CategoryDetailPage} />
                         </Switch>
                     </Grid>
                 </Grid>

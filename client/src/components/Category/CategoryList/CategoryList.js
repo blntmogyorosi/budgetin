@@ -1,8 +1,10 @@
 import React from 'react'
-
-import Category from '../Category/Category'
+import { withRouter } from 'react-router-dom'
 import { GridList, GridListTile } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+
+import CategoriesPage from '../../../containers/CategoriesPage'
+import Category from '../Category/Category'
 
 
 const useStyles = makeStyles(theme => ({
@@ -15,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const CategoryList = ({ categories }) => {
+const CategoryList = ({ categories, history }) => {
     const classes = useStyles()
 
     return (
@@ -27,7 +29,7 @@ const CategoryList = ({ categories }) => {
                 >
                     <Category
                         category={category}
-                        onClick={() => console.log(`/TransactionsPage.routeName/${category._id}`)}
+                        onClick={() => history.push(`${CategoriesPage.routeName}/${category._id}`)}
                     />
                 </GridListTile>
             ))}
@@ -35,4 +37,4 @@ const CategoryList = ({ categories }) => {
     )
 }
 
-export default CategoryList
+export default withRouter(CategoryList)
