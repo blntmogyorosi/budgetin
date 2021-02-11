@@ -1,13 +1,9 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
-import { AppBar, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Drawer, IconButton, Toolbar, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { Apartment as ApartmentIcon, Category as CategoryIcon, Dashboard as DashboardIcon, Menu as MenuIcon, Receipt as ReceiptIcon } from '@material-ui/icons'
-import { NavLink } from 'react-router-dom'
-import Dashboard from '../../containers/Dashboard'
-import TransactionsPage from '../../containers/TransactionsPage'
-import CategoriesPage from '../../containers/CategoriesPage'
-import UnitsPage from '../../containers/UnitsPage'
+import { Menu as MenuIcon } from '@material-ui/icons'
+import UserMenu from '../../components/Navigation/UserMenu/UserMenu'
 
 
 const drawerWidth = 250
@@ -60,9 +56,6 @@ const useStyles = makeStyles((theme) => ({
         width: drawerWidth,
         pointerEvents: 'auto',
     },
-    drawerItemIcon: {
-        minWidth: theme.spacing(4),
-    },
     content: {
         flexGrow: 1,
         padding: theme.spacing(1),
@@ -83,39 +76,6 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: 0,
     },
 }))
-
-const Menu = () => {
-    const classes = useStyles()
-
-    return (
-        <List component="nav">
-            <ListItem button component={NavLink} to={Dashboard.routeName}>
-                <ListItemIcon className={classes.drawerItemIcon}>
-                    <DashboardIcon />
-                </ListItemIcon>
-                <ListItemText primary="Dashboard" />
-            </ListItem>
-            <ListItem button component={NavLink} to={TransactionsPage.routeName}>
-                <ListItemIcon className={classes.drawerItemIcon}>
-                    <ReceiptIcon />
-                </ListItemIcon>
-                <ListItemText primary="Transactions" />
-            </ListItem>
-            <ListItem button component={NavLink} to={CategoriesPage.routeName}>
-                <ListItemIcon className={classes.drawerItemIcon}>
-                    <CategoryIcon />
-                </ListItemIcon>
-                <ListItemText primary="Categories" />
-            </ListItem>
-            <ListItem button component={NavLink} to={UnitsPage.routeName}>
-                <ListItemIcon className={classes.drawerItemIcon}>
-                    <ApartmentIcon />
-                </ListItemIcon>
-                <ListItemText primary="Units" />
-            </ListItem>
-        </List>
-    )
-}
 
 const UserLayout = ({ children }) => {
     const classes = useStyles()
@@ -151,7 +111,7 @@ const UserLayout = ({ children }) => {
                 }}
             >
                 <Toolbar />
-                <Menu />
+                <UserMenu />
             </Drawer>
             <Drawer
                 className={`${classes.drawer} ${classes.temporaryDrawer}`}
@@ -163,7 +123,7 @@ const UserLayout = ({ children }) => {
                     paper: classes.drawerPaper,
                 }}
             >
-                <Menu />
+                <UserMenu />
             </Drawer>
             <main
                 className={clsx(classes.content, {
