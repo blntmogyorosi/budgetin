@@ -1,11 +1,16 @@
-import { Button, Divider, Grid, makeStyles, Paper } from '@material-ui/core'
 import React from 'react'
+import { Button, Divider, Grid, makeStyles, Paper } from '@material-ui/core'
+import { Create as CreateIcon, Delete as DeleteIcon } from '@material-ui/icons'
 
 import Value from '../../Value/Value'
 import Transaction from '../Transaction/Transaction'
 
 
 const useStyles = makeStyles(theme => ({
+    transactionActions: {
+        justifyContent: 'space-evenly',
+        padding: theme.spacing(2),
+    },
     transactionProduct: {
         display: 'flex',
         flexFlow: 'nowrap row',
@@ -25,14 +30,20 @@ const TransactionDetail = ({ transaction }) => {
         <Paper>
             <Transaction transaction={transaction} single />
             <Divider />
-            <div className={""}>
-                <Button color="primary">
+            <Grid container className={classes.transactionActions}>
+                <Button
+                    color="secondary"
+                    startIcon={<CreateIcon />}
+                >
                     Edit
                 </Button>
-                <Button color="secondary">
+                <Button
+                    color="default"
+                    startIcon={<DeleteIcon />}
+                >
                     Delete
                 </Button>
-            </div>
+            </Grid>
             <Divider />
             <div className={""}>
                 {transaction.productList &&
