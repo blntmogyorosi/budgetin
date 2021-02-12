@@ -13,29 +13,15 @@ const Product = require('../models/Product');
 const getTransactions = (account, from, to) => {
     return Transaction
         .find({ account, performedOn: { $gte: from, $lte: to || moment().format("YYYY-MM-DD") } })
-        .populate(['category', 'unit'])
         .sort({ performedOn: -1 })
         .then(transactions => {
-            return transactions.reduce((formattedTransactions, transaction) => {
+            return transactions.reduce((transactions, transaction) => {
                 const performDate = moment(transaction.performedOn).format("YYYY-MM");
-                const formattedTransaction = {
-                    _id: transaction._id,
-                    category: {
-                        name: transaction.category.name,
-                        icon: transaction.category.icon,
-                        color: transaction.category.color,
-                        type: transaction.category.type,
-                    },
-                    unit: transaction.unit.name,
-                    value: transaction.value,
-                    performedOn: transaction.performedOn,
-                    productList: transaction.productList,
-                };
-                if (!Object.keys(formattedTransactions).includes(performDate))
-                    formattedTransactions[performDate] = [formattedTransaction]
+                if (!Object.keys(transactions).includes(performDate))
+                    transactions[performDate] = [transaction]
                 else
-                    formattedTransactions[performDate].push(formattedTransaction)
-                return formattedTransactions;
+                    transactions[performDate].push(transaction)
+                return transactions;
             }, {});
         });
 };

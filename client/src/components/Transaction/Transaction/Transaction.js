@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import { Icon, makeStyles } from '@material-ui/core'
 
 import Value from '../../Value/Value'
+import { connect } from 'react-redux'
 
 
 const useStyles = makeStyles(theme => ({
@@ -63,8 +64,11 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const Transaction = ({ transaction, onClick, single }) => {
+const Transaction = ({ transaction, onClick, single, categories, units }) => {
     const classes = useStyles()
+
+    const category = categories.find(c => c._id === transaction.category)
+    const unit = units.find(u => u._id === transaction.unit)
 
     return (
         <div className={clsx(classes.transaction, {
@@ -76,14 +80,14 @@ const Transaction = ({ transaction, onClick, single }) => {
                 </div>
             }
             <div className={classes.transactionBadge} onClick={onClick}>
-                <div className={classes.transactionIcon} style={{ color: transaction.category.color }}>
+                <div className={classes.transactionIcon} style={{ color: category.color }}>
                     <Icon>
-                        {transaction.category.icon}
+                        {category.icon}
                     </Icon>
                 </div>
                 <div className={classes.transactionInfo}>
-                    <span className={classes.transactionCategory} style={{ color: transaction.category.color }}>{transaction.category.name}</span>
-                    <span className={classes.transactionUnit}>{transaction.unit.name || transaction.unit}</span>
+                    <span className={classes.transactionCategory} style={{ color: category.color }}>{category.name}</span>
+                    <span className={classes.transactionUnit}>{unit.name}</span>
                 </div>
                 <Value value={transaction.value} />
             </div>
@@ -91,4 +95,9 @@ const Transaction = ({ transaction, onClick, single }) => {
     )
 }
 
-export default Transaction
+const mapStateToProps = state => ({
+    categories: state.categories.list,
+    units: state.units.list,
+})
+
+export default connect(mapStateToProps, {})(Transaction)
