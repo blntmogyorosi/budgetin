@@ -47,13 +47,13 @@ const MonthSelector = ({ date, transactions, previousMonth, nextMonth, }) => {
                     title={moment(`${date.year}-${date.month}`).format("MMMM, YYYY")}
                     income={
                         monthlyTransactions.reduce((sum, t) => {
-                            if (t.category.type === "INCOME") return sum + t.value
+                            if (t.value > 0) return sum + t.value
                             else return sum
                         }, 0)
                     }
                     expense={
                         monthlyTransactions.reduce((sum, t) => {
-                            if (t.category.type === "EXPENSE") return sum + t.value
+                            if (t.value < 0) return sum + t.value
                             else return sum
                         }, 0)
                     }
@@ -62,13 +62,13 @@ const MonthSelector = ({ date, transactions, previousMonth, nextMonth, }) => {
                     title="All Time"
                     income={
                         allTransactions.reduce((sum, t) => {
-                            if (t.category.type === "INCOME") return sum + t.value
+                            if (t.value > 0) return sum + t.value
                             else return sum
                         }, 0)
                     }
                     expense={
                         allTransactions.reduce((sum, t) => {
-                            if (t.category.type === "EXPENSE") return sum + t.value
+                            if (t.value < 0) return sum + t.value
                             else return sum
                         }, 0)
                     }
