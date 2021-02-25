@@ -19,8 +19,6 @@ class CategoryListPage extends React.Component {
     }
 
     render() {
-        console.log('render CategoryListPage')
-
         return (
             <React.Fragment>
                 <Title

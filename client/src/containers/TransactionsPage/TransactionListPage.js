@@ -6,7 +6,7 @@ import TransactionsPage from '.'
 import TransactionFormPage from './TransactionFormPage'
 import Title from '../../components/Title/Title'
 import { fetchTransactions } from '../../redux/actions/transactionsActions'
-import TransactionList from '../../components/TransactionList/TransactionList'
+import TransactionList from '../../components/Transaction/TransactionList/TransactionList'
 
 
 class TransactionListPage extends React.Component {

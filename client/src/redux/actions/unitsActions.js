@@ -5,7 +5,7 @@ import { SET_UNITS, APPEND_UNIT } from './actionTypes'
 
 
 export const fetchUnits = () => dispatch => {
-    axios
+    return axios
         .get('/api/units')
         .then(res => dispatch({
             type: SET_UNITS,

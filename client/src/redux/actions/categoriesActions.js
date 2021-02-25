@@ -5,7 +5,7 @@ import { SET_CATEGORIES, APPEND_CATEGORY } from './actionTypes'
 
 
 export const fetchCategories = () => dispatch => {
-    axios
+    return axios
         .get('/api/categories')
         .then(res => dispatch({
             type: SET_CATEGORIES,

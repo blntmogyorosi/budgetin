@@ -1,7 +1,7 @@
 import React from 'react'
 import CanvasJSReact from '../Chart/canvasjs.react'
 import { Paper, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 
 
 const useStyles = makeStyles(theme => ({
@@ -15,8 +15,34 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const UnitChart = ({ month, units }) => {
+const UnitChart = ({ month, transactions, units }) => {
     const classes = useStyles()
+    const theme = useTheme()
+
+    let dataPoints = []
+
+    if (transactions && units) {
+        dataPoints = transactions
+            .reduce((list, t) => {
+                if (t.value >= 0) return list
+                const index = list.findIndex(i => i._id === t.unit)
+                if (index !== -1) {
+                    list[index].y += Math.abs(t.value)
+                } else {
+                    const unit = units.find(u => u._id === t.unit)
+                    if (!unit) return list
+                    list.push({
+                        _id: unit._id,
+                        name: unit.name,
+                        label: unit.name,
+                        color: theme.palette.primary.main,
+                        y: Math.abs(t.value),
+                    })
+                }
+                return list
+            }, [])
+            .sort((a, b) => a.y > b.y ? 1 : -1)
+    }
 
     const CanvasJSChart = CanvasJSReact.CanvasJSChart
     const options = {
@@ -24,16 +50,17 @@ const UnitChart = ({ month, units }) => {
         height: 300,
         subtitles: [{
             text: month,
-            verticalAlign: 'center',
+            verticalAlign: 'top',
             fontSize: 20,
         }],
+        axisX: {
+            labelAngle: -45,
+            labelFontSize: 12,
+            interval: 1,
+        },
         data: [{
-            type: 'dougnut',
-            radius: '80%',
-            innerRadius: '75%',
-            indexLabelFontSize: 12,
-            indexLabel: '{name} - {y}',
-            dataPoints: units,
+            type: 'column',
+            dataPoints: dataPoints,
         }]
     }
 

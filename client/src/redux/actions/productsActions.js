@@ -5,7 +5,7 @@ import { SET_PRODUCTS } from './actionTypes'
 
 
 export const fetchProducts = () => dispatch => {
-    axios
+    return axios
         .get('/api/products')
         .then(res => {
             dispatch({

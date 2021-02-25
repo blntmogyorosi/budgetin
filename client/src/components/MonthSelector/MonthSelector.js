@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         width: '100%',
         padding: `${theme.spacing(2)}px 0`,
-        marginBottom: theme.spacing(4),
+        marginBottom: theme.spacing(2),
     },
     arrow: {
         padding: 0,

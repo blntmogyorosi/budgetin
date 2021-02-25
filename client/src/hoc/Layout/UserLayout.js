@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
-import { AppBar, Drawer, IconButton, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Button, Drawer, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { Menu as MenuIcon } from '@material-ui/icons'
+import { FolderShared as AccountIcon, Menu as MenuIcon, ExitToApp as LogOutIcon } from '@material-ui/icons'
+
 import UserMenu from '../../components/Navigation/UserMenu/UserMenu'
+import { logoutUser } from '../../redux/actions/authActions'
 
 
 const drawerWidth = 250
@@ -14,6 +16,17 @@ const useStyles = makeStyles((theme) => ({
     },
     appBar: {
         zIndex: 1200,
+    },
+    toolbar: {
+        flexFlow: 'row nowrap',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    toolbarMenu: {
+        display: 'flex',
+        flexFlow: 'row nowrap',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     menuButton: {
         marginRight: theme.spacing(1),
@@ -68,6 +81,9 @@ const useStyles = makeStyles((theme) => ({
             padding: theme.spacing(3),
         },
     },
+    container: {
+        maxWidth: theme.breakpoints.values.lg,
+    },
     contentShift: {
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.easeOut,
@@ -80,6 +96,10 @@ const useStyles = makeStyles((theme) => ({
 const UserLayout = ({ children }) => {
     const classes = useStyles()
 
+    const [accountsMenu, setAccountsMenu] = useState(null)
+    const accountsMenuClick = e => { setAccountsMenu(e.currentTarget) }
+    const accountsMenuClose = () => { setAccountsMenu(null) }
+
     const [tDrawerOpen, setTDrawerOpen] = useState(false)
     const toggleTDrawerOpen = () => { setTDrawerOpen(!tDrawerOpen) }
 
@@ -89,16 +109,44 @@ const UserLayout = ({ children }) => {
     return (
         <div className={classes.root}>
             <AppBar position="fixed" className={classes.appBar}>
-                <Toolbar>
-                    <IconButton color="inherit" edge="start" onClick={togglePDrawerOpen} className={`${classes.menuButton} ${classes.persistentMenuButton}`}>
-                        <MenuIcon />
-                    </IconButton>
-                    <IconButton color="inherit" edge="start" onClick={toggleTDrawerOpen} className={`${classes.menuButton} ${classes.temporaryMenuButton}`}>
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" noWrap>
-                        Budgetin
-                    </Typography>
+                <Toolbar className={classes.toolbar}>
+                    <div className={classes.toolbarMenu}>
+                        <IconButton color="inherit" edge="start" onClick={togglePDrawerOpen} className={`${classes.menuButton} ${classes.persistentMenuButton}`}>
+                            <MenuIcon />
+                        </IconButton>
+                        <IconButton color="inherit" edge="start" onClick={toggleTDrawerOpen} className={`${classes.menuButton} ${classes.temporaryMenuButton}`}>
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant="h6" noWrap>
+                            Budgetin
+                        </Typography>
+                    </div>
+                    <div>
+                        <Button
+                            startIcon={<AccountIcon />}
+                            onClick={accountsMenuClick}
+                            color="inherit"
+                        >
+                            Main
+                        </Button>
+                        <Menu
+                            open={Boolean(accountsMenu)}
+                            onClose={accountsMenuClose}
+                            anchorEl={accountsMenu}
+                            keepMounted
+                        >
+                            <MenuItem onClick={accountsMenuClose}>Current</MenuItem>
+                            <MenuItem onClick={accountsMenuClose}>Next One</MenuItem>
+                            <MenuItem onClick={accountsMenuClose}>Last One</MenuItem>
+                        </Menu>
+                        <Button
+                            startIcon={<LogOutIcon />}
+                            onClick={logoutUser}
+                            color="inherit"
+                        >
+                            Log Out
+                        </Button>
+                    </div>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -131,7 +179,9 @@ const UserLayout = ({ children }) => {
                 })}
             >
                 <Toolbar />
-                {children}
+                <div className={classes.container}>
+                    {children}
+                </div>
             </main>
         </div>
     );

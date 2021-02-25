@@ -10,6 +10,7 @@ import {
     Settings as SettingsIcon,
 } from '@material-ui/icons'
 
+import AccountsPage from '../../../containers/AccountsPage'
 import Dashboard from '../../../containers/Dashboard'
 import TransactionsPage from '../../../containers/TransactionsPage'
 import CategoriesPage from '../../../containers/CategoriesPage'
@@ -27,7 +28,7 @@ const UserMenu = () => {
 
     return (
         <List component="nav">
-            <ListItem button component={NavLink} to={'/accounts'}>
+            <ListItem button component={NavLink} to={AccountsPage.routeName}>
                 <ListItemIcon className={classes.listItemIcon}>
                     <FolderSharedIcon />
                 </ListItemIcon>

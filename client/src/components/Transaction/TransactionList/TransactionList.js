@@ -1,7 +1,7 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
-import { List, ListItem, ListItemText, Paper } from '@material-ui/core'
+import { List, ListItem, ListItemText, Paper, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 import TransactionsPage from '../../../containers/TransactionsPage'
@@ -10,6 +10,10 @@ import Value from '../../Value/Value'
 
 
 const useStyles = makeStyles(theme => ({
+    noTransactionContainer: {
+        padding: theme.spacing(2),
+        textAlign: 'center',
+    },
     list: {
         padding: 0,
     },
@@ -35,6 +39,16 @@ const useStyles = makeStyles(theme => ({
 
 const TransactionList = ({ transactions, history }) => {
     const classes = useStyles()
+
+    if (!transactions || transactions.length === 0) {
+        return (
+            <Paper className={classes.noTransactionContainer}>
+                <Typography variant="body1" component="p">
+                    No transactions have been added yet!
+                </Typography>
+            </Paper>
+        )
+    }
 
     const TransactionDate = ({ date, value }) => {
         return (

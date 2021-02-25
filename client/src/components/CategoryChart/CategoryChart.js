@@ -16,8 +16,32 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-const CategoryChart = ({ month, categories }) => {
+const CategoryChart = ({ month, transactions, categories }) => {
     const classes = useStyles()
+
+    let dataPoints = []
+
+    if (transactions && categories) {
+        dataPoints = transactions
+            .reduce((list, t) => {
+                if (t.value >= 0) return list
+                const index = list.findIndex(i => i._id === t.category)
+                if (index !== -1) {
+                    list[index].y += Math.abs(t.value)
+                } else {
+                    const category = categories.find(c => c._id === t.category)
+                    list.push({
+                        _id: category._id,
+                        name: category.name,
+                        label: category.name,
+                        color: category.color,
+                        y: Math.abs(t.value),
+                    })
+                }
+                return list
+            }, [])
+            .sort((a, b) => a.y > b.y ? 1 : -1)
+    }
 
     const CanvasJSChart = CanvasJSReact.CanvasJSChart
     const options = {
@@ -34,7 +58,7 @@ const CategoryChart = ({ month, categories }) => {
             innerRadius: '75%',
             indexLabelFontSize: 12,
             indexLabel: '{name} - {y}',
-            dataPoints: categories,
+            dataPoints: dataPoints,
         }]
     }
 

@@ -13,22 +13,20 @@ import { fetchTransactions } from '../redux/actions/transactionsActions'
 import CategoryChart from '../components/CategoryChart/CategoryChart'
 import MonthSelector from '../components/MonthSelector/MonthSelector'
 import UnitChart from '../components/UnitChart/UnitChart'
+import ProductTable from '../components/Product/ProductTable/ProductTable'
+import { fetchData } from '../fetchData'
+import Loading from '../components/Loading/Loading'
 
 
 const styles = theme => ({
-    firstCol: {
-        paddingRight: theme.spacing(1),
+    grid: {
+        justifyContent: 'space-between',
     },
-    secondCol: {
-        paddingLeft: theme.spacing(1),
+    gridItem: {
+        maxWidth: '49%',
+        flexBasis: '49%',
+        marginBottom: theme.spacing(2),
     },
-    chartContainer: {
-    },
-    chartItem: {
-        flex: '0 1 auto',
-        padding: theme.spacing(1),
-        width: '50%',
-    }
 })
 
 class Dashboard extends React.Component {
@@ -38,20 +36,33 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            loaded: false,
         }
     }
 
     componentDidMount() {
-        this.props.fetchCategories()
-        this.props.fetchUnits()
-        this.props.fetchTransactions()
-        this.props.fetchProducts()
+        fetchData()
+            .then(() => {
+                this.setState({ loaded: true })
+            })
     }
 
     render() {
+        if (!this.state.loaded) {
+            return (
+                <UserLayout>
+                    <Loading />
+                </UserLayout>
+            )
+        }
+
         const { classes, date: { month, year } } = this.props
 
         const transactions = this.props.transactions.dictionary[`${year}-${month}`] || []
+        const { categories, units } = this.props
+
+        const allTransactions = Object.values(this.props.transactions.dictionary)
+            .reduce((list, month) => ([...list, ...month]), [])
 
         return (
             <UserLayout>
@@ -59,53 +70,45 @@ class Dashboard extends React.Component {
                     <Grid item xs={12}>
                         <MonthSelector />
                     </Grid>
-                    <Grid container>
-                        <Grid item xs={12} md={6} className={classes.firstCol}>
+                    <Grid container className={classes.grid}>
+                        <Grid item xs={12} md={6} className={classes.gridItem}>
                             <CategoryChart
                                 month={`${moment().month(month - 1).format('MMM')}, ${year}`}
-                                categories={
-                                    transactions
-                                        .reduce((list, t) => {
-                                            if (t.category.type !== "EXPENSE") return list
-                                            const index = list.findIndex(i => i.name === t.category.name)
-                                            if (index !== -1) {
-                                                list[index].y += Math.abs(t.value)
-                                            } else {
-                                                list.push({
-                                                    name: t.category.name,
-                                                    label: t.category.name,
-                                                    color: t.category.color,
-                                                    y: Math.abs(t.value),
-                                                })
-                                            }
-                                            return list
-                                        }, [])
-                                }
+                                transactions={transactions}
+                                categories={categories}
                             />
                         </Grid>
-                        <Grid item xs={12} md={6} className={classes.secondCol}>
+                        <Grid item xs={12} md={6} className={classes.gridItem}>
                             <Paper>
                                 <CategoryChart
                                     month="All Time"
-                                    categories={
-                                        this.props.categories.list
-                                            .filter(t => t.transactionsSum !== 0 && t.type === "EXPENSE")
-                                            .map(t => ({ name: t.name, y: t.transactionsSum, label: t.label, color: t.color }))
-                                            .sort((prev, next) => prev.y > next.y)
-                                    }
+                                    transactions={allTransactions}
+                                    categories={categories}
                                 />
                             </Paper>
                         </Grid>
                     </Grid>
-                    <Grid container>
-                        <Grid item xs={12} md={6} className={classes.firstCol}>
+                    <Grid container className={classes.grid}>
+                        <Grid item xs={12} md={6} className={classes.gridItem}>
                             <UnitChart
-                                month={""}
-                                units={""}
+                                month={`${moment().month(month - 1).format('MMM')}, ${year}`}
+                                transactions={transactions}
+                                units={units}
                             />
                         </Grid>
-                        <Grid item xs={12} md={6} className={classes.secondCol}>
-
+                        <Grid item xs={12} md={6} className={classes.gridItem}>
+                            <UnitChart
+                                month="All Time"
+                                transactions={allTransactions}
+                                units={units}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container className={classes.grid}>
+                        <Grid item xs={12} md={6}>
+                            <ProductTable
+                                transactions={transactions}
+                            />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -117,10 +120,10 @@ class Dashboard extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    categories: state.categories,
+    categories: state.categories.list,
     date: state.date,
     transactions: state.transactions,
-    units: state.units,
+    units: state.units.list,
     products: state.products,
 })
 

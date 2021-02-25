@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import CategoryDetail from '../../components/Category/CategoryDetail/CategoryDetail'
 
 
 class CategoryDetailPage extends Component {
@@ -14,16 +16,25 @@ class CategoryDetailPage extends Component {
 
     static getDerivedStateFromProps(props, state) {
         const _id = props.match.params.category
-        console.log(_id)
+        state.category = props.categories.find(c => c._id === _id)
+        return state
     }
 
     render() {
         return (
             <React.Fragment>
-                Category Detail Page
+                <CategoryDetail
+                    category={this.state.category}
+                    transactions={[]}
+                />
             </React.Fragment>
         )
     }
 }
 
-export default CategoryDetailPage
+const mapStateToProps = state => ({
+    categories: state.categories.list,
+    transactions: state.transactions.dictionary,
+})
+
+export default connect(mapStateToProps, null)(CategoryDetailPage)

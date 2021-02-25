@@ -6,7 +6,7 @@ import { SET_TRANSACTIONS } from './actionTypes'
 
 
 export const fetchTransactions = (callback) => dispatch => {
-    axios
+    return axios
         .get(`/api/transactions?from=${moment().startOf('month').format('YYYY-MM-DD')}&to=${moment().add(1, 'day').format('YYYY-MM-DD')}`)
         .then(res => {
             dispatch({

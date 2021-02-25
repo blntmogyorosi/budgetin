@@ -7,8 +7,14 @@ import store from './redux'
 
 
 export const fetchData = () => {
-    store.dispatch(fetchCategories())
-    store.dispatch(fetchUnits())
-    store.dispatch(fetchProducts())
-    store.dispatch(fetchTransactions())
+    return Promise
+        .all(
+            [
+                store.dispatch(fetchCategories()),
+                store.dispatch(fetchUnits()),
+                store.dispatch(fetchProducts()),
+                store.dispatch(fetchTransactions()),
+            ]
+        )
+        .then(results => Promise.resolve())
 }
