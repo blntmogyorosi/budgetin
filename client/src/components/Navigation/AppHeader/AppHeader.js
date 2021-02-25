@@ -3,8 +3,6 @@ import React from 'react'
 import Brand from '../Brand/Brand'
 import Menu from '../Menu/Menu'
 
-import './AppHeader.scss'
-
 
 const AppHeader = () => {
     return (

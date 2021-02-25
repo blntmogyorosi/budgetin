@@ -11,8 +11,6 @@ import Units from '../../../containers/Units'
 import TransactionsPage from '../../../containers/TransactionsPage'
 import { logoutUser } from '../../../redux/actions/authActions'
 
-import './Menu.scss'
-
 
 const Menu = ({ auth, logoutUser }) => {
     return (

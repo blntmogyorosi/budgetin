@@ -7,7 +7,7 @@ import store from './redux'
 import App from './App'
 import './authenticate'
 
-import './index.scss'
+import './index.css'
 
 
 ReactDOM.render(

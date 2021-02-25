@@ -12,6 +12,7 @@ import UnitsPage from './containers/UnitsPage'
 import CategoriesPage from './containers/CategoriesPage'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core'
 import { pink, teal } from '@material-ui/core/colors'
+import AccountsPage from './containers/AccountsPage'
 
 
 const theme = createMuiTheme({
@@ -33,8 +34,9 @@ const App = () => {
                 <UnauthenticatedRoute exact path={Home.routeName} component={Home} />
                 <UnauthenticatedRoute path={Register.routeName} component={Register} />
                 <UnauthenticatedRoute path={LogIn.routeName} component={LogIn} />
+                <AuthenticatedRoute path={AccountsPage.routeName} component={AccountsPage} />
                 <AuthenticatedRoute path={Dashboard.routeName} component={Dashboard} />
-                <AuthenticatedRoute path={'/categories'} component={CategoriesPage} />
+                <AuthenticatedRoute path={CategoriesPage.routeName} component={CategoriesPage} />
                 <AuthenticatedRoute path={UnitsPage.routeName} component={UnitsPage} />
                 <AuthenticatedRoute path={TransactionsPage.routeName} component={TransactionsPage} />
             </Switch>
