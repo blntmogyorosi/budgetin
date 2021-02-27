@@ -53,4 +53,21 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
         .catch(err => res.status(400).json(err));
 });
 
+router.delete('/:_id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    const { _id } = req.params;
+
+    Account
+        .findOne({ owner: req.user._id })
+        .then(account => {
+            if (!account) return Promise.reject('No account found!')
+
+            return Transaction
+                .deleteOne({ _id, account: account._id })
+                .then(result => {
+                    return res.json(_id);
+                })
+        })
+        .catch(err => res.status(400).json(err));
+})
+
 module.exports = router;

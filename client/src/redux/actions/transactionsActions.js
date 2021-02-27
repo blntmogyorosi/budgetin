@@ -2,7 +2,7 @@ import axios from 'axios'
 import moment from 'moment'
 
 import { setErrors } from './errorsAction'
-import { SET_TRANSACTIONS } from './actionTypes'
+import { DELETE_TRANSACTION, SET_TRANSACTIONS } from './actionTypes'
 
 
 export const fetchTransactions = (callback) => dispatch => {
@@ -44,4 +44,17 @@ const createTransaction = (transaction, callback) => dispatch => {
 
 const updateTransaction = (transaction, callback) => dispatch => {
 
+}
+
+export const deleteTransaction = (transaction, callback) => dispatch => {
+    axios
+        .delete(`/api/transactions/${transaction._id}`)
+        .then(res => {
+            dispatch({
+                type: DELETE_TRANSACTION,
+                payload: transaction,
+            })
+            return callback ? callback(res.data) : undefined
+        })
+        .catch(err => dispatch(setErrors(err.response.data)))
 }

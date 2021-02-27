@@ -1,9 +1,15 @@
-import React from 'react'
-import { Button, Divider, Grid, makeStyles, Paper } from '@material-ui/core'
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
+import { Button, Divider, Grid, makeStyles, Paper, Typography } from '@material-ui/core'
 import { Create as CreateIcon, Delete as DeleteIcon } from '@material-ui/icons'
 
 import Value from '../../Value/Value'
 import Transaction from '../Transaction/Transaction'
+import ButtonContainer from '../../ButtonContainer/ButtonContainer'
+import Modal from '../../Modal/Modal'
+import { deleteTransaction } from '../../../redux/actions/transactionsActions'
+import { withRouter } from 'react-router-dom'
+import TransactionsPage from '../../../containers/TransactionsPage'
 
 
 const useStyles = makeStyles(theme => ({
@@ -19,12 +25,24 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         padding: `${theme.spacing(1)}px ${theme.spacing(3)}px`,
     },
+    modalHeader: {
+        padding: theme.spacing(4),
+    },
 }))
 
-const TransactionDetail = ({ transaction }) => {
+
+const TransactionDetail = ({ transaction, ...props }) => {
+    const [isConfirmDeleteTransaction, setIsConfirmDeleteTransaction] = useState(false)
     const classes = useStyles()
+    const { deleteTransaction, history } = props
 
     if (!transaction) return null
+
+    const deleteTransactionCover = () => {
+        deleteTransaction(transaction, () => {
+            history.push(`${TransactionsPage.routeName}`)
+        })
+    }
 
     return (
         <Paper>
@@ -40,6 +58,7 @@ const TransactionDetail = ({ transaction }) => {
                 <Button
                     color="default"
                     startIcon={<DeleteIcon />}
+                    onClick={() => setIsConfirmDeleteTransaction(true)}
                 >
                     Delete
                 </Button>
@@ -55,8 +74,26 @@ const TransactionDetail = ({ transaction }) => {
                     ))
                 }
             </div>
+            <Modal
+                open={isConfirmDeleteTransaction}
+                onClose={() => setIsConfirmDeleteTransaction(false)}
+            >
+                <div className={classes.modalHeader}>
+                    <Typography>
+                        Are you sure you want to delete this transaction?
+                    </Typography>
+                </div>
+                <ButtonContainer>
+                    <Button onClick={() => setIsConfirmDeleteTransaction(false)}>
+                        No
+                    </Button>
+                    <Button color="primary" onClick={deleteTransactionCover}>
+                        Yes
+                    </Button>
+                </ButtonContainer>
+            </Modal>
         </Paper>
     )
 }
 
-export default TransactionDetail
+export default connect(null, { deleteTransaction })(withRouter(TransactionDetail))
