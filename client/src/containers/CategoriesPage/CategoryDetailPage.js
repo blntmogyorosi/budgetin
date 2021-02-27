@@ -21,11 +21,19 @@ class CategoryDetailPage extends Component {
     }
 
     render() {
+        const { category } = this.state
+
+        const transactions = Object.values(this.props.transactions)
+            .reduce(
+                (list, month) => ([...list, ...month.filter(i => i.category === category._id)]),
+                []
+            )
+
         return (
             <React.Fragment>
                 <CategoryDetail
                     category={this.state.category}
-                    transactions={[]}
+                    transactions={transactions}
                 />
             </React.Fragment>
         )

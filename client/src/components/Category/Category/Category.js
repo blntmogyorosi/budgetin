@@ -9,6 +9,7 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         alignContent: 'center',
         alignItems: 'center',
+        padding: theme.spacing(2),
     },
     categoryIcon: {
         fontSize: theme.spacing(8),
