@@ -41,20 +41,20 @@ class Dashboard extends React.Component {
     }
 
     componentDidMount() {
-        fetchData()
-            .then(() => {
-                this.setState({ loaded: true })
-            })
+        // fetchData()
+        //     .then(() => {
+        //         this.setState({ loaded: true })
+        //     })
     }
 
     render() {
-        if (!this.state.loaded) {
-            return (
-                <UserLayout>
-                    <Loading />
-                </UserLayout>
-            )
-        }
+        // if (!this.state.loaded) {
+        //     return (
+        //         <UserLayout>
+        //             <Loading />
+        //         </UserLayout>
+        //     )
+        // }
 
         const { classes, date: { month, year } } = this.props
 

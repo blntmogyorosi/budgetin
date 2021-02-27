@@ -6,6 +6,8 @@ import { FolderShared as AccountIcon, Menu as MenuIcon, ExitToApp as LogOutIcon 
 
 import UserMenu from '../../components/Navigation/UserMenu/UserMenu'
 import { logoutUser } from '../../redux/actions/authActions'
+import { fetchData } from '../../fetchData'
+import Loading from '../../components/Loading/Loading'
 
 
 const drawerWidth = 250
@@ -96,6 +98,15 @@ const useStyles = makeStyles((theme) => ({
 const UserLayout = ({ children }) => {
     const classes = useStyles()
 
+    const [loaded, setLoaded] = useState(localStorage.getItem('loaded'))
+    if (!loaded) {
+        fetchData()
+            .then(() => {
+                setLoaded(true)
+                localStorage.setItem('loaded', true)
+            })
+    }
+
     const [accountsMenu, setAccountsMenu] = useState(null)
     const accountsMenuClick = e => { setAccountsMenu(e.currentTarget) }
     const accountsMenuClose = () => { setAccountsMenu(null) }
@@ -180,7 +191,11 @@ const UserLayout = ({ children }) => {
             >
                 <Toolbar />
                 <div className={classes.container}>
-                    {children}
+                    {loaded ?
+                        children
+                        :
+                        <Loading />
+                    }
                 </div>
             </main>
         </div>

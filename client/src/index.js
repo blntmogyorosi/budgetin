@@ -10,6 +10,9 @@ import './authenticate'
 import './index.css'
 
 
+// Remove loaded property from the localstorage
+localStorage.removeItem('loaded')
+
 ReactDOM.render(
     <Provider store={store}>
         <BrowserRouter>
