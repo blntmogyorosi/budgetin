@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-import { SET_TRANSACTIONS, SET_TRANSACTION, DELETE_TRANSACTION } from '../actions/actionTypes'
+import { SET_TRANSACTIONS, SET_TRANSACTION, DELETE_TRANSACTION, INSERT_TRANSACTION } from '../actions/actionTypes'
 
 
 const initialState = {
@@ -24,6 +24,14 @@ export default function (state = initialState, action) {
                 ...state,
                 item: action.payload,
                 itemFetched: Date.now,
+            }
+        case INSERT_TRANSACTION:
+            dictionary = { ...state.dictionary }
+            dictionary[moment(action.payload.performedOn).format('YYYY-MM')].push(action.payload)
+            console.log(action.payload)
+            return {
+                ...state,
+                dictionary,
             }
         case DELETE_TRANSACTION:
             dictionary = { ...state.dictionary }

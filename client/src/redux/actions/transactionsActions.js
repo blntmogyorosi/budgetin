@@ -2,7 +2,7 @@ import axios from 'axios'
 import moment from 'moment'
 
 import { setErrors } from './errorsAction'
-import { DELETE_TRANSACTION, SET_TRANSACTIONS } from './actionTypes'
+import { DELETE_TRANSACTION, INSERT_TRANSACTION, SET_TRANSACTIONS } from './actionTypes'
 
 
 export const fetchTransactions = (callback) => dispatch => {
@@ -38,7 +38,13 @@ export const saveTransaction = (transaction, callback) => dispatch => {
 const createTransaction = (transaction, callback) => dispatch => {
     axios
         .post('/api/transactions', transaction)
-        .then(res => callback ? callback(res.data) : undefined)
+        .then(res => {
+            dispatch({
+                type: INSERT_TRANSACTION,
+                payload: res.data,
+            })
+            return callback ? callback(res.data) : undefined
+        })
         .catch(err => dispatch(setErrors(err.response.data)))
 }
 
