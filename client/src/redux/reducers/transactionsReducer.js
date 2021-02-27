@@ -1,4 +1,6 @@
-import { SET_TRANSACTIONS, SET_TRANSACTION } from '../actions/actionTypes'
+import moment from 'moment'
+
+import { SET_TRANSACTIONS, SET_TRANSACTION, DELETE_TRANSACTION } from '../actions/actionTypes'
 
 
 const initialState = {
@@ -9,6 +11,7 @@ const initialState = {
 }
 
 export default function (state = initialState, action) {
+    let dictionary
     switch (action.type) {
         case SET_TRANSACTIONS:
             return {
@@ -21,6 +24,13 @@ export default function (state = initialState, action) {
                 ...state,
                 item: action.payload,
                 itemFetched: Date.now,
+            }
+        case DELETE_TRANSACTION:
+            dictionary = { ...state.dictionary }
+            dictionary[moment(action.payload.performedOn).format('YYYY-MM')] = dictionary[moment(action.payload.performedOn).format('YYYY-MM')].filter(i => i._id !== action.payload._id)
+            return {
+                ...state,
+                dictionary,
             }
         default:
             return state
