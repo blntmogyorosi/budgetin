@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
+import { withRouter } from 'react-router'
 import clsx from 'clsx'
-import { AppBar, Button, Drawer, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Button, Drawer, Fab, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { FolderShared as AccountIcon, Menu as MenuIcon, ExitToApp as LogOutIcon } from '@material-ui/icons'
+import { FolderShared as AccountIcon, Add as AddIcon, Menu as MenuIcon, ExitToApp as LogOutIcon } from '@material-ui/icons'
 
+import TransactionsPage from '../../containers/TransactionsPage'
+import TransactionFormPage from '../../containers/TransactionsPage/TransactionFormPage'
 import UserMenu from '../../components/Navigation/UserMenu/UserMenu'
 import { logoutUser } from '../../redux/actions/authActions'
 import { fetchData } from '../../fetchData'
@@ -93,10 +96,17 @@ const useStyles = makeStyles((theme) => ({
         }),
         marginLeft: 0,
     },
+    transactionAddButton: {
+        position: 'fixed',
+        right: theme.spacing(4),
+        bottom: theme.spacing(4),
+    },
 }))
 
-const UserLayout = ({ children }) => {
+const UserLayout = ({ children, ...props }) => {
     const classes = useStyles()
+
+    const { history  } = props
 
     const [loaded, setLoaded] = useState(localStorage.getItem('loaded'))
     if (!loaded) {
@@ -198,8 +208,15 @@ const UserLayout = ({ children }) => {
                     }
                 </div>
             </main>
+            <Fab
+                color="primary"
+                className={classes.transactionAddButton}
+                onClick={() => history.push(`${TransactionsPage.routeName}${TransactionFormPage.routeName}`)}
+            >
+                <AddIcon />
+            </Fab>
         </div>
     );
 }
 
-export default UserLayout
+export default withRouter(UserLayout)
