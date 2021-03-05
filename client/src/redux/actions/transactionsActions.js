@@ -2,7 +2,7 @@ import axios from 'axios'
 import moment from 'moment'
 
 import { setErrors } from './errorsAction'
-import { DELETE_TRANSACTION, INSERT_TRANSACTION, SET_TRANSACTIONS } from './actionTypes'
+import { DELETE_TRANSACTION, INSERT_TRANSACTION, SET_TRANSACTIONS, UPDATE_TRANSACTION } from './actionTypes'
 
 
 export const fetchTransactions = (callback) => dispatch => {
@@ -49,7 +49,15 @@ const createTransaction = (transaction, callback) => dispatch => {
 }
 
 const updateTransaction = (transaction, callback) => dispatch => {
-
+    axios
+        .put(`/api/transactions/${transaction._id}`, transaction)
+        .then(res => {
+            dispatch({
+                type: UPDATE_TRANSACTION,
+                payload: res.data,
+            })
+            return callback ? callback(res.data) : undefined
+        })
 }
 
 export const deleteTransaction = (transaction, callback) => dispatch => {

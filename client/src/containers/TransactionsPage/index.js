@@ -8,6 +8,7 @@ import TransactionFormPage from './TransactionFormPage'
 import TransactionDetailPage from './TransactionDetailPage'
 import { Grid, makeStyles, useMediaQuery } from '@material-ui/core'
 import MonthSelector from '../../components/MonthSelector/MonthSelector'
+import TransactionEditPage from './TransactionEditPage'
 
 
 const useStyles = makeStyles(theme => ({
@@ -36,6 +37,7 @@ const TransactionsPage = ({ match }) => {
                     <Grid item xs={12} md={6} className={classes.secondCol}>
                         <Switch>
                             <AuthenticatedRoute path={`${match.url}${TransactionFormPage.routeName}`} component={TransactionFormPage} />
+                            <AuthenticatedRoute path={`${match.url}${TransactionEditPage.routeName}`} component={TransactionEditPage} />
                             <AuthenticatedRoute path={`${match.url}${TransactionDetailPage.routeName}`} component={TransactionDetailPage} />
                         </Switch>
                     </Grid>

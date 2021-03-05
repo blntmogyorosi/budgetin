@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 import TransactionForm from '../../components/TransactionForm/TransactionForm'
 
 
-class TransactionFormPage extends React.Component {
+class TransactionEditPage extends React.Component {
 
-    static routeName = '/new'
+    static routeName = '/:transaction/edit'
 
     constructor(props) {
         super(props)
@@ -39,4 +39,4 @@ const mapStateToProps = state => ({
     transactions: state.transactions.dictionary,
 })
 
-export default connect(mapStateToProps)(TransactionFormPage)
+export default connect(mapStateToProps)(TransactionEditPage)

@@ -33,13 +33,17 @@ class TransactionForm extends React.Component {
 
     constructor(props) {
         super(props)
+        const transaction = props.transaction || {}
         this.state = {
             form: {
+                _id: {
+                    value: transaction._id,
+                },
                 type: {
                     component: TypeSelector,
                     id: 'type',
                     name: 'type',
-                    value: '',
+                    value: transaction.type || '',
                     onChange: this.onInputChange,
                     grid: {
                         xs: 12,
@@ -49,7 +53,7 @@ class TransactionForm extends React.Component {
                     component: IconSelector,
                     id: 'category',
                     name: 'category',
-                    value: '',
+                    value: transaction.category || '',
                     onChange: this.onInputChange,
                     icons: [],
                     grid: {
@@ -60,7 +64,7 @@ class TransactionForm extends React.Component {
                     component: UnitSelector,
                     id: 'unit',
                     name: 'unit',
-                    value: '',
+                    value: transaction.unit || '',
                     onChange: this.onInputChange,
                     units: [],
                     grid: {
@@ -74,14 +78,16 @@ class TransactionForm extends React.Component {
                     name: 'performedOn',
                     variant: 'outlined',
                     label: 'Performed On',
-                    value: moment().format('YYYY-MM-DD'),
+                    value: transaction.performedOn ? moment(transaction.performedOn).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD'),
                     onChange: this.onInputChange,
                     fullWidth: true,
                     grid: {
                         xs: 12,
                     },
                 },
-                productList: [],
+                productList: transaction.productList && Array.isArray(transaction.productList) ?
+                    transaction.productList.map(p => this.createProduct(p.name, Math.abs(p.value))) :
+                    [],
             },
         }
     }
@@ -93,6 +99,35 @@ class TransactionForm extends React.Component {
             state.form.unit.units = props.units.list.map(u => ({ value: u._id, label: u.name }))
         return state
     }
+
+    createProduct = (productName, productValue) => ({
+        name: {
+            component: MyTextField,
+            type: 'text',
+            placeholder: 'Name',
+            value: productName || '',
+            onChange: this.onProductListChange,
+            autoFocus: true,
+            fullWidth: true,
+            grid: {
+                xs: 6,
+            },
+        },
+        value: {
+            component: MyTextField,
+            type: 'number',
+            placeholder: 'Value',
+            value: productValue || '',
+            onChange: this.onProductListChange,
+            InputProps: {
+                endAdornment: <InputAdornment position="end">Ft</InputAdornment>,
+            },
+            fullWidth: true,
+            grid: {
+                xs: 6,
+            },
+        },
+    })
 
     onInputChange = (e) => {
         const { name, value } = e.target
@@ -107,6 +142,7 @@ class TransactionForm extends React.Component {
         const { form } = this.state
         this.props.saveTransaction(
             {
+                _id: form._id.value,
                 category: form.category.value,
                 unit: form.unit.value,
                 performedOn: form.performedOn.value,
@@ -128,36 +164,7 @@ class TransactionForm extends React.Component {
                 form.productList[form.productList.length - 1].value.value === ''
             )
         ) return null
-        form.productList.push(
-            {
-                name: {
-                    component: MyTextField,
-                    type: 'text',
-                    placeholder: 'Name',
-                    value: '',
-                    onChange: this.onProductListChange,
-                    autoFocus: true,
-                    fullWidth: true,
-                    grid: {
-                        xs: 6,
-                    },
-                },
-                value: {
-                    component: MyTextField,
-                    type: 'number',
-                    placeholder: 'Value',
-                    value: '',
-                    onChange: this.onProductListChange,
-                    InputProps: {
-                        endAdornment: <InputAdornment position="end">Ft</InputAdornment>,
-                    },
-                    fullWidth: true,
-                    grid: {
-                        xs: 6,
-                    },
-                },
-            }
-        )
+        form.productList.push(this.createProduct())
         this.setState({ form })
     }
 

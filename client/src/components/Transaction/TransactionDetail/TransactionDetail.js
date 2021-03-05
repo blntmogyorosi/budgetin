@@ -52,6 +52,7 @@ const TransactionDetail = ({ transaction, ...props }) => {
                 <Button
                     color="secondary"
                     startIcon={<CreateIcon />}
+                    onClick={() => history.push(`${TransactionsPage.routeName}/${transaction._id}/edit`)}
                 >
                     Edit
                 </Button>

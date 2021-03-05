@@ -53,6 +53,37 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
         .catch(err => res.status(400).json(err));
 });
 
+router.put('/:_id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    const { _id, category, unit, performedOn, productList } = req.body;
+
+    Account
+        .findOne({ owner: req.user.id })
+        .then(account => {
+            if (!account) return Promise.reject('No account found!');
+
+            return Transaction
+                .validateCreate(account._id, category, unit, performedOn, productList)
+                .then(transaction => {
+                    return Transaction
+                        .findOneAndUpdate(
+                            { account: account._id, _id },
+                            {
+                                category: transaction.category,
+                                unit: transaction.unit,
+                                performedOn: transaction.performedOn,
+                                value: transaction.value,
+                                productList: transaction.productList,
+                            },
+                            {
+                                returnOriginal: false,
+                            }
+                        );
+                })
+        })
+        .then(transaction => res.json(transaction))
+        .catch(err => res.status(400).json(err));
+});
+
 router.delete('/:_id', passport.authenticate('jwt', { session: false }), (req, res) => {
     const { _id } = req.params;
 
