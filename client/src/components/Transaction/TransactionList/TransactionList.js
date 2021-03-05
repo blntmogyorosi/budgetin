@@ -82,7 +82,7 @@ const TransactionList = ({ transactions, history }) => {
     let tempList = []
     let list = []
 
-    for (let transaction of transactions) {
+    for (let transaction of transactions.sort((a, b) => moment(a.performedOn).isBefore(b.performedOn) ? 1 : -1)) {
         if (transaction.performedOn !== performedOn) {
             if (performedOn) {
                 list = createDateBlock(performedOn, tempValue, tempList, list)
